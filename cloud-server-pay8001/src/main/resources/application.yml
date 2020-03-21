@@ -1,0 +1,17 @@
+server:
+  port: 8001  # 端口号
+
+spring:
+  application:
+    name: cloud-payment-service  #服务名称
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://localhost:3306/bscloud?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+
+# mybatis 整合
+  mybatis:
+    mapperLocations: classpath:mapper/*.xml
+    type-aliases-package: com.wxw.cloud.domain    # 所有的实体别名类所在的包
