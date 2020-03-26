@@ -7,9 +7,10 @@
   <artifactId>bs-cloud</artifactId>
   <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>cloud-server-pay8001</module>
-        <module>cloud-server-order8002</module>
         <module>cloud-server-common</module>
+        <module>cloud-registry-server</module>
+        <module>cloud-gateway-server</module>
+        <module>cloud-web-server</module>
     </modules>
     <packaging>pom</packaging>
 

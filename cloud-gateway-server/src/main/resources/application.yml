@@ -1,0 +1,31 @@
+server:
+  port: 10010
+spring:
+  application:
+    name: cloud-gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          route-id-prefix: /api
+      routes:
+        - id: cloud-bs-service #路由的ID，没有固定规则但要求唯一，建议配合服务名
+          uri: lb://cloud-bs-service   #开启动态路由
+          predicates:
+            - Path=/web/**   #断言, 路由到商品的微服务
+
+eureka:
+  client:
+    fetch-registry: true  #需要拉取服务
+    register-with-eureka: true    #需要在eureka中注册自己
+    service-url:
+     defaultZone: http://bs.wxw.com:10086/eureka
+  instance:
+    #避免显示主机名
+    instance-id: cloud-gateway-server
+    #显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒（默认30秒）
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
+    lease-expiration-duration-in-seconds: 90

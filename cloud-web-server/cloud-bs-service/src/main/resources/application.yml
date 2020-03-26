@@ -1,0 +1,27 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: cloud-bs-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/bs-wxw?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://bs.wxw.com:10086/eureka
+  instance:
+    #避免显示主机名
+    instance-id: cloud-bs-service
+    #显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒（默认30秒）
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
+    lease-expiration-duration-in-seconds: 90
+mybatis:
+  type-aliases-package: com.wxw.cloud.domain
+  mapper-locations:
+    - classpath:mapper/*.xml

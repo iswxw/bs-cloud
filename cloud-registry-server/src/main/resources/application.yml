@@ -1,0 +1,15 @@
+#端口号
+server:
+  port: 10086
+#服务名称
+spring:
+  application:
+    name: cloud-registry-server
+#单个eureka的情况
+eureka:
+  client:
+    fetch-registry: false #需要拉取服务
+    register-with-eureka: false #需要在eureka中注册自己
+    service-url:
+      defaultZone: http://bs.wxw.com:10086/eureka
+    registry-fetch-interval-seconds: 5  # 拉取服务的间隔时间
