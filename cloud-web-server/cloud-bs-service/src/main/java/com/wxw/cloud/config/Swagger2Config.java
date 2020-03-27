@@ -10,11 +10,12 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/**
+/*
  * @Author: wxw
  * @create: 2020-03-15-0:24
  * Swagger2API文档的配置
  */
+
 @Configuration
 @EnableSwagger2
 public class Swagger2Config {
@@ -33,7 +34,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("微服务接口API在线文档")
                 .description("Welcome in BS2020")
-                .contact("bs2020")
+                .contact("BS2020")
                 .version("1.0")
                 .build();
     }

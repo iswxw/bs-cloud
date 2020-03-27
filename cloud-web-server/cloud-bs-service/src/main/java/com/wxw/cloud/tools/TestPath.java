@@ -11,8 +11,8 @@ import java.io.FileInputStream;
  */
 public class TestPath {
     public static void main(String[] args) {
-        File file = FileUtil.newFile("a.txt");
-        // F:\Study_GO\Study_Project\bs-cloud\a.txt
-        System.out.println(file.getAbsolutePath());
+        //获取程序当前路径 F:\Study_GO\Study_Project\bs-cloud
+        System.out.println(System.getProperty("user.dir"));
+
     }
 }
