@@ -5,11 +5,16 @@ spring:
     name: cloud-gateway-server
   cloud:
     gateway:
+      discovery:
+        locator:
+          enabled: true  #开启从注册中心动态创建路由的功能，利用微服务名进行路由
       routes:
         - id: cloud-bs-service #路由的ID，没有固定规则但要求唯一，建议配合服务名
           uri: lb://cloud-bs-service   #开启动态路由
           predicates:
-            - Path=/item/**   #断言, 路由到商品的微服务
+            - Path=/api/item/**   #断言, 路由到商品的微服务
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
