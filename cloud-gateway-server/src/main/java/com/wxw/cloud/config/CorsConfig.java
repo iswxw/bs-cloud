@@ -2,6 +2,7 @@ package com.wxw.cloud.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
@@ -12,6 +13,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
  * @create: 2020-03-28-1:55
  *  gateway跨域配置
  */
+@Component
 @Configuration
 public class CorsConfig {
 
