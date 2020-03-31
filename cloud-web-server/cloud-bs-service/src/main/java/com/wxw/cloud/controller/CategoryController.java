@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +50,7 @@ public class CategoryController {
             // 200 查询成功
             return ResponseEntity.ok(categories);
     }
-
+    @Transactional
     @ApiOperation("根据ID判断，已经存在就更新节点负责新增节点")
     @PostMapping("saveOrUpdate")
     public ResponseEntity<Void> saveOrUpdateCategory(@RequestBody Category category){
@@ -58,6 +59,7 @@ public class CategoryController {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
+    @Transactional
     @ApiOperation("根据ID删除指定节点")
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){

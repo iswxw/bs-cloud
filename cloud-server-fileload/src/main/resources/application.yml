@@ -6,7 +6,7 @@ spring:
     name: cloud-server-fileload
   servlet:
     multipart:
-      enabled: false
+      enabled: true
       max-file-size: 5MB
 
 eureka:
