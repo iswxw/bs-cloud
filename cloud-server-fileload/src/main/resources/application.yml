@@ -22,3 +22,13 @@ eureka:
     lease-renewal-interval-in-seconds: 30
     #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
     lease-expiration-duration-in-seconds: 90
+
+# fastDFS 客户端
+fdfs:
+ so-timeout: 1501 # 超时时间
+ connect-timeout: 601 # 连接超时时间
+ thumb-image: # 缩略图
+   width: 60
+   height: 60
+ tracker-list: # tracker地址：你的虚拟机服务器地址+端口（默认是22122）
+   - 47.101.141.168:22122  # 踪迹服务器地址

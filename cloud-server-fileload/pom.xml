@@ -12,6 +12,12 @@
     <artifactId>cloud-server-fileload</artifactId>
 
     <dependencies>
+
+        <!--FastDFS 客户端-->
+        <dependency>
+            <groupId>com.github.tobato</groupId>
+            <artifactId>fastdfs-client</artifactId>
+        </dependency>
         <!--eureka client-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
