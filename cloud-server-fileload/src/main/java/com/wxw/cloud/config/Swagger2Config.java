@@ -1,11 +1,7 @@
 package com.wxw.cloud.config;
 
-import com.google.common.base.Function;
-import com.google.common.base.Optional;
-import com.google.common.base.Predicate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -47,8 +43,8 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("微服务接口API在线文档")
-                .description("Welcome in http://bs.wxw.com:8081/swagger-ui.html")
-                .contact("商品微服务")
+                .description("Welcome in http://bs.wxw.com:8082/swagger-ui.html")
+                .contact("文件微服务")
                 .version("1.0")
                 .build();
     }

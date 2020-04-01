@@ -15,6 +15,12 @@ spring:
             - Path=/api/item/**   #断言, 路由到商品的微服务
           filters:
             - StripPrefix=2
+        - id: cloud-server-fileload
+          uri: lb://cloud-server-fileload
+          predicates:
+            - Path=/api/load/**
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
