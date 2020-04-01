@@ -33,7 +33,7 @@ public class CategoryController {
     @Resource
     private ICategoryService categoryService;
 
-    @ApiOperation("根据父节点的pid查询子节点")
+    @ApiOperation("根据父节点的pid查询子节点类目信息")
     @GetMapping("list")
     public ResponseEntity<List<Category>> queryCategorisById(@RequestParam(value = "pid",defaultValue = "0")Long pid){
 
@@ -50,8 +50,9 @@ public class CategoryController {
             // 200 查询成功
             return ResponseEntity.ok(categories);
     }
+
     @Transactional
-    @ApiOperation("根据ID判断，已经存在就更新节点负责新增节点")
+    @ApiOperation("根据ID是否存在？是：更新节点   否：新增节点")
     @PostMapping("saveOrUpdate")
     public ResponseEntity<Void> saveOrUpdateCategory(@RequestBody Category category){
         log.info("category入参=>{}",category);
@@ -66,6 +67,16 @@ public class CategoryController {
         log.info("节点ID入参=>{}", id);
         boolean flag = this.categoryService.removeById(id);
         return new ResponseEntity<Void>(HttpStatus.CREATED);
+    }
+
+    @ApiOperation("根据品牌信息查询商品分类列表")
+    @GetMapping("bid/{bid}")
+    public ResponseEntity<List<Category>> queryByBrandId(@PathVariable("bid")Long bid){
+        List<Category> list=this.categoryService.queryByBrandId(bid);
+        if (CollectionUtils.isEmpty(list)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(list);
     }
 }
 

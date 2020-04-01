@@ -67,4 +67,34 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
             this.brandMapper.insertCategoryAndBrand(cid, brand.getId());
         });
     }
+    /**
+     * 商品修改
+     * @param brand
+     * @param cids
+     */
+    @Transactional
+    @Override
+    public void updateBrand(Brand brand, List<Long> cids) {
+        //先修改 brand
+        this.brandMapper.updateById(brand);
+        //删除关联的中间表
+        this.brandMapper.deleteCategoryBrandId(brand.getId());
+        // 添加中间表
+        cids.forEach(cid->{
+            this.brandMapper.insertCategoryAndBrand(cid, brand.getId());
+        });
+    }
+
+    /**
+     * 删除商品
+     * @param brandId 商品ID
+     */
+    @Transactional
+    @Override
+    public void deleteBrand(Long brandId) {
+        //删除商品表
+        this.brandMapper.deleteById(brandId);
+        //删除中间表的关联
+        this.brandMapper.deleteCategoryBrandId(brandId);
+    }
 }

@@ -22,4 +22,10 @@ public interface ICategoryService extends IService<Category> {
      */
     List<Category> queryCategoriesById(Long pid);
 
+    /**
+     * 根据品牌ID 查询商品分类列表
+     * @param bid
+     * @return
+     */
+    List<Category> queryByBrandId(Long bid);
 }

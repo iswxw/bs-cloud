@@ -38,4 +38,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return categories;
     }
 
+    /**
+     * 根据品牌ID 查询商品分类列表
+     * @param bid
+     * @return
+     */
+    @Override
+    public List<Category> queryByBrandId(Long bid) {
+        return this.categoryMapper.queryByBrandId(bid);
+    }
+
 }

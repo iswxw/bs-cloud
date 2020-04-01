@@ -6,6 +6,7 @@ import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.service.IBrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,11 +56,30 @@ public class BrandController {
         return ResponseEntity.ok(result);
     }
 
-    @ApiOperation("品牌新增商品")
+    @ApiOperation("新增品牌")
     @PostMapping
     public ResponseEntity<Void> saveBrand(Brand brand,@RequestParam("cids") List<Long> cids){
         this.brandService.saveBrand(brand,cids);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @ApiOperation("修改品牌")
+    @PutMapping
+    public ResponseEntity<Void> updateBrand(Brand brand,@RequestParam("cids") List<Long> cids){
+        this.brandService.updateBrand(brand,cids);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @ApiOperation("删除品牌")
+    @DeleteMapping("/{brandId}")
+    public ResponseEntity<Void> deleteBrand(@PathVariable("brandId") Long brandId){
+        this.brandService.deleteBrand(brandId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
+
+
+
 }
 
