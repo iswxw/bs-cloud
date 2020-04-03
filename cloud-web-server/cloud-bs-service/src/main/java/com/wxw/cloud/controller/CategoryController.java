@@ -51,16 +51,19 @@ public class CategoryController {
             return ResponseEntity.ok(categories);
     }
 
-    @Transactional
     @ApiOperation("根据ID是否存在？是：更新节点   否：新增节点")
     @PostMapping("saveOrUpdate")
     public ResponseEntity<Void> saveOrUpdateCategory(@RequestBody Category category){
         log.info("category入参=>{}",category);
-        boolean flag = this.categoryService.saveOrUpdate(category);
+        boolean b = this.categoryService.updateById(category);
+        if (!b){
+            // 更新失败 说明不存在就新增
+            this.categoryService.save(category);
+        }
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @Transactional
+
     @ApiOperation("根据ID删除指定节点")
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long id){

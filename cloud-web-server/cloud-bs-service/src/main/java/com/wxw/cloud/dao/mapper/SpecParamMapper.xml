@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxw.cloud.dao.SpecParamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.domain.SpecParam">
+        <id column="id" property="id" />
+        <result column="cid" property="cid" />
+        <result column="group_id" property="groupId" />
+        <result column="name" property="name" />
+        <result column="numeric" property="numeric" />
+        <result column="unit" property="unit" />
+        <result column="generic" property="generic" />
+        <result column="searching" property="searching" />
+        <result column="segments" property="segments" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, cid, group_id, name, numeric, unit, generic, searching, segments
+    </sql>
+
+</mapper>
