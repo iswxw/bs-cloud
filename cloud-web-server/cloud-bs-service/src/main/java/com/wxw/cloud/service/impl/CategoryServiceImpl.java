@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -46,6 +47,18 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public List<Category> queryByBrandId(Long bid) {
         return this.categoryMapper.queryByBrandId(bid);
+    }
+
+    /**
+     *  通过 三级目录ID查询对应的类目名称
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<String> queryNamesByIds(List<Long> ids){
+        List<Category> categories = this.categoryMapper.selectBatchIds(ids);
+        // category -> category.getName() <==> Category::getName
+        return categories.stream().map(Category::getName).collect(Collectors.toList());
     }
 
 }

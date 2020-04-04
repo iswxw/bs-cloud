@@ -5,6 +5,9 @@ import com.wxw.cloud.domain.Brand;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,4 +24,7 @@ public interface BrandMapper extends BaseMapper<Brand> {
 
     @Delete("DELETE FROM tb_category_brand where brand_id=#{bid}")
     void deleteCategoryBrandId(Long id);
+
+    @Select("SELECT b.* from tb_brand b INNER JOIN tb_category_brand cb on b.id=cb.brand_id where cb.category_id=#{cid}")
+    List<Brand> queryBrandsByCid(Long cid);
 }

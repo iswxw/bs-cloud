@@ -28,4 +28,12 @@ public interface ICategoryService extends IService<Category> {
      * @return
      */
     List<Category> queryByBrandId(Long bid);
+
+    /**
+     * 根据多个分类ID查询 分类名称
+     * @param ids
+     * @return
+     */
+    public List<String> queryNamesByIds(List<Long> ids);
+
 }

@@ -40,7 +40,6 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
           if (StringUtils.isNotBlank(key)){
               queryWrapper.like("name", key).or().like("letter", key);
           }
-
         // 2. 添加分页条件
         Page<Brand> pageParam = new Page<>(page,rows);
         // 3.添加排序条件
@@ -96,5 +95,15 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
         this.brandMapper.deleteById(brandId);
         //删除中间表的关联
         this.brandMapper.deleteCategoryBrandId(brandId);
+    }
+
+    /**
+     * 根据分类cid查询品牌列表
+     * @param cid
+     * @return
+     */
+    @Override
+    public List<Brand> queryBrandsByCid(Long cid) {
+        return this.brandMapper.queryBrandsByCid(cid);
     }
 }
