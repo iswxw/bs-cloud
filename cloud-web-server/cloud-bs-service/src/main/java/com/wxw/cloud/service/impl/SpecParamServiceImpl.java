@@ -26,10 +26,21 @@ public class SpecParamServiceImpl extends ServiceImpl<SpecParamMapper, SpecParam
     private SpecParamMapper specParamMapper;
 
     @Override
-    public List<SpecParam> queryParams(Long gid) {
+    public List<SpecParam> queryParams(Long gid, Long cid, Boolean generic, Boolean searching) {
+
         QueryWrapper<SpecParam> wrapper = new QueryWrapper<>();
-        wrapper.eq("group_id",gid);
+        wrapper.eq(false,"group_id",gid);
+        wrapper.eq(false,"cid", cid);
+        wrapper.eq(false,"generic", generic);
+        wrapper.eq(false,"searching", searching);
         return this.specParamMapper.selectList(wrapper);
     }
+
+
+
+
+
+
+
 
 }

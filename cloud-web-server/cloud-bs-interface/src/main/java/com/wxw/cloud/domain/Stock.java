@@ -10,47 +10,40 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ * 库存表，代表库存，秒杀库存等信息
  * </p>
  *
  * @author WXW
- * @since 2020-04-04
+ * @since 2020-04-05
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("tb_spu_detail")
-public class SpuDetail implements Serializable {
+@TableName("tb_stock")
+public class Stock implements Serializable {
 
     private static final long serialVersionUID=1L;
 
-    @TableId(value = "spu_id",type = IdType.NONE)
-    private Long spuId;
+    /**
+     * 库存对应的商品sku id
+     */
+    @TableId(value = "sku_id", type = IdType.NONE)
+    private Long skuId;
 
     /**
-     * 商品描述信息
+     * 可秒杀库存
      */
-    private String description;
+    private Integer seckillStock;
 
     /**
-     * 通用规格参数数据
+     * 秒杀总数量
      */
-    private String genericSpec;
+    private Integer seckillTotal;
 
     /**
-     * 特有规格参数及可选值信息，json格式
+     * 库存数量
      */
-    private String specialSpec;
-
-    /**
-     * 包装清单
-     */
-    private String packingList;
-
-    /**
-     * 售后服务
-     */
-    private String afterService;
+    private Integer stock;
 
 
 }

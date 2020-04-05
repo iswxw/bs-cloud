@@ -52,9 +52,9 @@ public class UploadServiceImpl implements UploadService {
             // 1.保存到服务器
             // file.transferTo(new File("F:\\Study_GO\\BS2020\\images\\"+originalFilename));
 
-            //2. 保存到FastDFS
+            //2. 保存到FastDFS  上传为缩略图
              String ext = StringUtils.substringAfterLast(originalFilename, ".");
-             StorePath storePath = this.storageClient.uploadFile(file.getInputStream(), file.getSize(), ext, null);
+             StorePath storePath = this.storageClient.uploadImageAndCrtThumbImage(file.getInputStream(), file.getSize(), ext, null);
 
             // 1.返回url,进行回显
             //return "http://image.wxw.com/" + originalFilename;

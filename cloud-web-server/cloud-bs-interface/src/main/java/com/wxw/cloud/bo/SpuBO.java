@@ -1,7 +1,11 @@
 package com.wxw.cloud.bo;
 
+import com.wxw.cloud.domain.Sku;
 import com.wxw.cloud.domain.Spu;
+import com.wxw.cloud.domain.SpuDetail;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @Author: wxw
@@ -14,5 +18,10 @@ public class SpuBO extends Spu {
     private String cname;
 
     private String bname;
+
+    private SpuDetail spuDetail;
+
+    private List<Sku> skus;
+
 
 }
