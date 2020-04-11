@@ -1,6 +1,7 @@
 package com.wxw.cloud.controller;
 
 
+import com.wxw.cloud.domain.Brand;
 import com.wxw.cloud.domain.Category;
 import com.wxw.cloud.service.ICategoryService;
 import io.swagger.annotations.Api;
@@ -81,6 +82,21 @@ public class CategoryController {
         }
         return ResponseEntity.ok(list);
     }
+
+    /**
+     * 搜索微服务使用
+     */
+    @ApiOperation("根据多个分类ID查询 分类名称")
+    @GetMapping
+    public ResponseEntity<List<String>> queryNamesByIds(@RequestParam("ids")List<Long> ids){
+        List<String> names = this.categoryService.queryNamesByIds(ids);
+        if (CollectionUtils.isEmpty(names)){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(names);
+    }
+
+
 
 }
 

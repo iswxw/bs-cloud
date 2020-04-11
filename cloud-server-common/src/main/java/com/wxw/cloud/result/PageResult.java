@@ -32,4 +32,6 @@ public class PageResult<T> implements Serializable {
         this.items = items;
     }
 
+    public PageResult() {
+    }
 }

@@ -1,0 +1,38 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: cloud-bs-search
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      cluster-nodes: wxw.plus:9300
+
+  # 多个接口上的@FeignClient(“相同服务名”)会报错，overriding is disabled。
+  # 设置 为true ,即 允许 同名
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/bs-wxw?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+eureka:
+  client:
+    service-url:
+      defaultZone: http://bs.wxw.com:10086/eureka
+    # 拉取服务时间
+    registry-fetch-interval-seconds: 10
+#开启eureka负载均衡策略
+ribbon:
+  eureka:
+    enabled: true
+
+  instance:
+    #避免显示主机名
+    instance-id: cloud-bs-search
+    #显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒（默认30秒）
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
+    lease-expiration-duration-in-seconds: 90

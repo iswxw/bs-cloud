@@ -20,7 +20,7 @@
             <artifactId>cloud-bs-interface</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-        <!--eureka-client-->
+        <!--eureka-rpc-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>

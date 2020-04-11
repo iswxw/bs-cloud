@@ -19,6 +19,16 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--引入自定义的common通用包 提供使用实体-->
+        <dependency>
+            <groupId>com.wxw</groupId>
+            <artifactId>cloud-server-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

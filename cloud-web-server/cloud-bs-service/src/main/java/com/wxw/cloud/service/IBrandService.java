@@ -25,4 +25,6 @@ public interface IBrandService extends IService<Brand> {
     void deleteBrand(Long brandId);
 
     List<Brand> queryBrandsByCid(Long cid);
+
+    Brand queryBrandById(Long id);
 }

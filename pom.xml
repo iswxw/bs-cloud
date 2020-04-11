@@ -12,6 +12,7 @@
         <module>cloud-gateway-server</module>
         <module>cloud-web-server</module>
         <module>cloud-server-fileload</module>
+        <module>cloud-server-search</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -106,4 +106,9 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
     public List<Brand> queryBrandsByCid(Long cid) {
         return this.brandMapper.queryBrandsByCid(cid);
     }
+
+    @Override
+    public Brand queryBrandById(Long id) {
+        return this.brandMapper.selectById(id);
+    }
 }
