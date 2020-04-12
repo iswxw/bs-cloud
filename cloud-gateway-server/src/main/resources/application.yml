@@ -21,6 +21,12 @@ spring:
             - Path=/api/load/**
           filters:
             - StripPrefix=2
+        - id: cloud-bs-search
+          uri: lb://cloud-bs-search
+          predicates:
+            - Path=/api/search/**   # 路由到搜索微服务
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:

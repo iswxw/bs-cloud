@@ -3,13 +3,20 @@ package com.wxw.cloud.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wxw.cloud.domain.*;
+import com.wxw.cloud.repository.GoodsRepository;
+import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.rpc.BrandClient;
 import com.wxw.cloud.rpc.CategoryClient;
 import com.wxw.cloud.rpc.GoodsClient;
 import com.wxw.cloud.rpc.SpecParamClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.http.ResponseEntity;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +31,9 @@ import java.util.*;
 public class SearchService {
 
     @Resource
+    private GoodsRepository goodsRepository;
+
+    @Resource
     private BrandClient brandClient;
 
     @Resource
@@ -36,6 +46,31 @@ public class SearchService {
     private SpecParamClient specParamClient;
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+
+
+    public PageResult<Goods> search(SearchRequest request) {
+        if (StringUtils.isBlank(request.getKey())){
+            return null;
+        }
+        // 自定义查询构建器
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+        //1、对key进行全文检索查询
+        queryBuilder.withQuery(QueryBuilders.matchQuery("all", request.getKey()).operator(Operator.AND));
+        // 3、分页
+        // 准备分页参数
+        int page = request.getPage();
+        int size = request.getSize();
+        queryBuilder.withPageable(PageRequest.of(page - 1, size));
+
+        // 3、通过sourceFilter设置返回的结果字段,我们只需要id、skus、subTitle
+        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"id","skus","subTitle"},null));
+
+        // 执行查询获取结果集
+        Page<Goods> goodsPage = this.goodsRepository.search(queryBuilder.build());
+        // 封装结果并返回
+        return new PageResult<>(goodsPage.getTotalElements(), (long) goodsPage.getTotalPages(), goodsPage.getContent());
+    }
 
     /**
      * 构建Goods 实例
