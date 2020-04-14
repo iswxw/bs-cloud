@@ -2,6 +2,7 @@ package com.wxw.cloud.controller;
 
 import com.wxw.cloud.domain.Goods;
 import com.wxw.cloud.domain.SearchRequest;
+import com.wxw.cloud.domain.SearchResult;
 import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.service.SearchService;
 import io.swagger.annotations.Api;
@@ -27,8 +28,8 @@ public class SearchController {
 
     @ApiOperation("基本搜索入口")
     @PostMapping("page")
-    public ResponseEntity<PageResult<Goods>> search(@RequestBody SearchRequest searchRequest){
-        PageResult<Goods> result=this.searchService.search(searchRequest);
+    public ResponseEntity<SearchResult> search(@RequestBody SearchRequest searchRequest){
+        SearchResult result=this.searchService.search(searchRequest);
         if (result==null|| CollectionUtils.isEmpty(result.getItems())){
             return ResponseEntity.notFound().build();
         }

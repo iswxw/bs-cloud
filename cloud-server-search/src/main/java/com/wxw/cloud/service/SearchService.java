@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wxw.cloud.domain.*;
 import com.wxw.cloud.repository.GoodsRepository;
-import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.rpc.BrandClient;
 import com.wxw.cloud.rpc.CategoryClient;
 import com.wxw.cloud.rpc.GoodsClient;
@@ -13,8 +12,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.springframework.data.domain.Page;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: wxw
@@ -49,7 +52,7 @@ public class SearchService {
 
 
 
-    public PageResult<Goods> search(SearchRequest request) {
+    public SearchResult search(SearchRequest request) {
         if (StringUtils.isBlank(request.getKey())){
             return null;
         }
@@ -66,10 +69,55 @@ public class SearchService {
         // 3、通过sourceFilter设置返回的结果字段,我们只需要id、skus、subTitle
         queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"id","skus","subTitle"},null));
 
+        /**
+         *  二期：添加分类和品牌的聚合
+         */
+        String categoryAggName = "categories";
+        String brandAggName = "brands";
+        queryBuilder.addAggregation(AggregationBuilders.terms(categoryAggName).field("cid3"));
+        queryBuilder.addAggregation(AggregationBuilders.terms(brandAggName).field("brandId"));
+
         // 执行查询获取结果集
-        Page<Goods> goodsPage = this.goodsRepository.search(queryBuilder.build());
+        AggregatedPage<Goods> goodsPage = (AggregatedPage<Goods>)this.goodsRepository.search(queryBuilder.build());
+
+        // 获取聚合结果集并解析
+        List<Map<String,Object>> categories = getCategoryAggResult(goodsPage.getAggregation(categoryAggName));
+
+        List<Brand> brands = getBrandAggResult(goodsPage.getAggregation(brandAggName));
         // 封装结果并返回
-        return new PageResult<>(goodsPage.getTotalElements(), (long) goodsPage.getTotalPages(), goodsPage.getContent());
+        return new SearchResult(goodsPage.getTotalElements(), (long) goodsPage.getTotalPages(), goodsPage.getContent(),categories,brands);
+    }
+
+    /**
+     * 解析品牌的聚合结果集
+     * @param aggregation
+     * @return
+     */
+    private List<Brand> getBrandAggResult(Aggregation aggregation) {
+        LongTerms terms = (LongTerms) aggregation;
+        //获取聚合中的桶
+        return terms.getBuckets().stream().map(bucket -> {
+            return this.brandClient.queryBrandById(bucket.getKeyAsNumber().longValue());
+        }).collect(Collectors.toList());
+    }
+
+    /**
+     *  解析 分类的聚合结果集
+     * @param aggregation
+     * @return
+     */
+    private List<Map<String, Object>> getCategoryAggResult(Aggregation aggregation) {
+        LongTerms terms = (LongTerms) aggregation;
+        // 获取桶的集合并转化成List<Map<String, Object>>的集合
+        return terms.getBuckets().stream().map(bucket -> {
+            Map<String, Object> map = new HashMap<>();
+            // 获取桶中的分类ID
+            Long id = bucket.getKeyAsNumber().longValue();
+            List<String> names = this.categoryClient.queryNamesByIds(Arrays.asList(id));
+            map.put("id", id);
+            map.put("name", names.get(0));
+            return map;
+        }).collect(Collectors.toList());
     }
 
     /**
