@@ -10,16 +10,21 @@ import com.wxw.cloud.rpc.GoodsClient;
 import com.wxw.cloud.rpc.SpecParamClient;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
+import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -59,7 +64,12 @@ public class SearchService {
         // 自定义查询构建器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
         //1、对key进行全文检索查询
-        queryBuilder.withQuery(QueryBuilders.matchQuery("all", request.getKey()).operator(Operator.AND));
+        MatchQueryBuilder basicQuery = QueryBuilders.matchQuery("all", request.getKey()).operator(Operator.AND);
+
+        //构建布尔查询 数据过滤
+       // BoolQueryBuilder basicQuery = buildBoolQueryBuilder(request);
+
+        queryBuilder.withQuery(basicQuery);
         // 3、分页
         // 准备分页参数
         int page = request.getPage();
@@ -82,11 +92,39 @@ public class SearchService {
 
         // 获取聚合结果集并解析
         List<Map<String,Object>> categories = getCategoryAggResult(goodsPage.getAggregation(categoryAggName));
-
         List<Brand> brands = getBrandAggResult(goodsPage.getAggregation(brandAggName));
+
+        /**
+         *  三期： 规格参数聚合
+         */
+        // 判断是否是一个分类，只有一个分类时才做规格参数聚合
+
         // 封装结果并返回
         return new SearchResult(goodsPage.getTotalElements(), (long) goodsPage.getTotalPages(), goodsPage.getContent(),categories,brands);
     }
+
+    // 构建布尔查询
+//    private BoolQueryBuilder buildBoolQueryBuilder(SearchRequest request) {
+//        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+//        // 给布尔查询添加基本的查询条件
+//        boolQueryBuilder.must(QueryBuilders.matchQuery("all", request.getKey()).operator(Operator.AND));
+//        // 添加过滤条件
+//        // 获取用户选择的过滤信息
+//        Map<String, Object> filter = request.getFilter();
+//        for (Map.Entry<String, Object> entry : filter.entrySet()) {
+//            String key = entry.getKey();
+//            if (StringUtils.equals("品牌", key)){
+//                key = "brandId";
+//            }else if (StringUtils.equals("分类",key)){
+//                key = "cid3";
+//            }
+//            // 此处不处理规格参数过滤
+//            boolQueryBuilder.filter(QueryBuilders.termQuery(key,entry.getValue()));
+//        }
+//
+//        return boolQueryBuilder;
+//    }
+
 
     /**
      * 解析品牌的聚合结果集

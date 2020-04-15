@@ -18,6 +18,10 @@ public class SearchResult extends PageResult<Goods> {
 
     private List<Brand> brands;
 
+    // 聚合规格参数 发序列化localdatatime  问题 暂放
+   // private List<Map<String,Object>> specs;
+
+
     public SearchResult(Long total, List<Goods> items, List<Map<String, Object>> categories, List<Brand> brands) {
         super(total, items);
         this.categories = categories;
