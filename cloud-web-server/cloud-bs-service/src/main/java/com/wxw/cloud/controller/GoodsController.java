@@ -3,6 +3,7 @@ package com.wxw.cloud.controller;
 
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.domain.Sku;
+import com.wxw.cloud.domain.Spu;
 import com.wxw.cloud.domain.SpuDetail;
 import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.service.IGoodsService;
@@ -85,6 +86,17 @@ public class GoodsController {
     public ResponseEntity<Void> updateGoods(@RequestBody SpuBO spuBO){
         this.goodsService.updateGoods(spuBO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    @ApiOperation("根据spuId查询spu信息")
+    @GetMapping("{id}")
+    public ResponseEntity<Spu> querySpuById(@PathVariable("id")Long id){
+        Spu spu = this.goodsService.querySpuById(id);
+        if (spu == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(spu);
     }
 
 }

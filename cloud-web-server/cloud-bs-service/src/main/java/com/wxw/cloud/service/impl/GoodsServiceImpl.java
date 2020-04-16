@@ -10,7 +10,10 @@ import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.service.ICategoryService;
 import com.wxw.cloud.service.IGoodsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.AmqpException;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +33,7 @@ import java.util.stream.Collectors;
  * @author WXW
  * @since 2020-04-04
  */
+@Slf4j
 @Service
 public class GoodsServiceImpl implements IGoodsService {
 
@@ -50,6 +54,9 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Resource
     private StockMapper stockMapper;
+
+    @Resource
+    private AmqpTemplate amqpTemplate;
 
     /**
      * 根据条件分页查询SPU
@@ -109,7 +116,24 @@ public class GoodsServiceImpl implements IGoodsService {
         this.spuDetailMapper.insert(spuDetail);
         // 新增sku and stock
         this.saveSkuAndStock(spuBO);
+
+        // 发送消息
+        sendMsg("insert",spuBO.getId());
     }
+
+    /**
+     *  MQ 监听发送消息
+     * @param type
+     * @param id
+     */
+    private void sendMsg(String type,Long id) {
+        try {
+            this.amqpTemplate.convertAndSend("item."+type,id);
+        } catch (AmqpException e) {
+            log.info("新增商品消息发送失败：=>{}");
+        }
+    }
+
     // 新增sku and stock
     private void saveSkuAndStock(SpuBO spuBO) {
         spuBO.getSkus().forEach(sku -> {
@@ -179,6 +203,13 @@ public class GoodsServiceImpl implements IGoodsService {
         spuBO.setSaleable(null);
         this.spuMapper.updateById(spuBO);
         this.spuDetailMapper.updateById(spuBO.getSpuDetail());
+
+        sendMsg("update", spuBO.getId());
+    }
+
+    @Override
+    public Spu querySpuById(Long id) {
+        return this.spuMapper.selectById(id);
     }
 
 }

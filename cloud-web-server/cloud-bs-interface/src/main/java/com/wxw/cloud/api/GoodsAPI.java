@@ -2,6 +2,7 @@ package com.wxw.cloud.api;
 
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.domain.Sku;
+import com.wxw.cloud.domain.Spu;
 import com.wxw.cloud.domain.SpuDetail;
 import com.wxw.cloud.result.PageResult;
 
@@ -35,6 +36,9 @@ public interface GoodsAPI {
      */
     @GetMapping("spu/detail/{spuId}")
     public SpuDetail querySpuDetailBySpuId(@PathVariable("spuId")Long spuId);
+
+    @GetMapping("{id}")
+    public Spu querySpuById(@PathVariable("id")Long id);
 
 
 }

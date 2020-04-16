@@ -11,6 +11,13 @@ spring:
     username: root
     password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
+  rabbitmq:
+    host: wxw.plus
+    virtual-host: /wxw
+    username: wxw
+    password: wxw
+    template:
+      exchange: WXW.ITEM.EXCHANGE
 eureka:
   client:
     service-url:

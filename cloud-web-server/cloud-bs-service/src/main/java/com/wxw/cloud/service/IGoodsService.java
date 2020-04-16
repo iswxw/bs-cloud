@@ -2,6 +2,7 @@ package com.wxw.cloud.service;
 
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.domain.Sku;
+import com.wxw.cloud.domain.Spu;
 import com.wxw.cloud.domain.SpuDetail;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxw.cloud.result.PageResult;
@@ -48,4 +49,11 @@ public interface IGoodsService {
      * @param spuBO
      */
     void updateGoods(SpuBO spuBO);
+
+    /**
+     *  根据spuId查询spu
+     * @param id
+     * @return
+     */
+    Spu querySpuById(Long id);
 }

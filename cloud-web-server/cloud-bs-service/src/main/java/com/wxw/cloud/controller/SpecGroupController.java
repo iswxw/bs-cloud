@@ -63,5 +63,16 @@ public class SpecGroupController {
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
+
+    @ApiOperation("根据分类Id查询组下规格参数")
+    @GetMapping("group/param/{cid}")
+    public ResponseEntity<List<SpecGroup>> queryGroupswithParam(@PathVariable("cid")Long cid){
+        List<SpecGroup> groups = this.specGroupService.queryGroupswithParam(cid);
+        if (CollectionUtils.isEmpty(groups)){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(groups);
+    }
+
 }
 

@@ -18,6 +18,11 @@ spring:
     password: 123456
   jackson:
     default-property-inclusion: non_null   # 序列化的时候过滤调为空的字段
+  rabbitmq:
+    host: wxw.plus
+    virtual-host: /wxw
+    username: wxw
+    password: wxw
 eureka:
   client:
     service-url:

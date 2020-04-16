@@ -267,4 +267,13 @@ public class SearchService {
     }
 
 
+    public void saveMQ(Long id) throws IOException {
+        Spu spu = this.goodsClient.querySpuById(id);
+        Goods goods = this.buildGoods(spu);
+        this.goodsRepository.save(goods);
+    }
+
+    public void deleteMQ(Long id) {
+        this.goodsRepository.deleteById(id);
+    }
 }

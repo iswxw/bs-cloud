@@ -91,7 +91,7 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
     @Transactional
     @Override
     public void deleteBrand(Long brandId) {
-        //删除商品表
+        //删除商品表  删除其实是下架
         this.brandMapper.deleteById(brandId);
         //删除中间表的关联
         this.brandMapper.deleteCategoryBrandId(brandId);

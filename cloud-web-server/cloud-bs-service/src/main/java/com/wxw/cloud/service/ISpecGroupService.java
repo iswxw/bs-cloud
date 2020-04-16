@@ -20,4 +20,6 @@ public interface ISpecGroupService extends IService<SpecGroup> {
     void saveGroup(SpecGroup specGroup);
 
     void updateGroup(SpecGroup specGroup);
+
+    List<SpecGroup> queryGroupswithParam(Long cid);
 }

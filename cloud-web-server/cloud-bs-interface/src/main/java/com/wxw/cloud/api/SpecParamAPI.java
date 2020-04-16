@@ -1,6 +1,7 @@
 package com.wxw.cloud.api;
 
 
+import com.wxw.cloud.domain.SpecGroup;
 import com.wxw.cloud.domain.SpecParam;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,11 @@ public interface SpecParamAPI {
             @RequestParam(value = "generic",required = false)Boolean generic,
             @RequestParam(value = "searching",required = false)Boolean searching
     );
+
+    //@ApiOperation("根据分类Id查询组下规格参数")
+    @GetMapping("group/param/{cid}")
+    public List<SpecGroup> queryGroupswithParam(@PathVariable("cid")Long cid);
+
 
 }
 
