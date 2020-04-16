@@ -20,6 +20,9 @@ import java.util.Scanner;
  */
 public class CodeGenerator {
 
+    // 基础数据微服务 路径
+    public static String webPath="/cloud-web-server/cloud-bs-service/src/main/java";
+    public static String userPath="/cloud-server-user/cloud-user-service/src/main/java";
     /**
      * 读取控制台内容
      */
@@ -43,7 +46,7 @@ public class CodeGenerator {
         //获取程序当前路径
         String projectPath = System.getProperty("user.dir");
         System.out.println(projectPath);
-              gc.setOutputDir(projectPath+"/cloud-web-server/cloud-bs-service/src/main/java")
+              gc.setOutputDir(projectPath+userPath)
                 .setAuthor("WXW")
                 .setEnableCache(false)
                 .setFileOverride(true)
