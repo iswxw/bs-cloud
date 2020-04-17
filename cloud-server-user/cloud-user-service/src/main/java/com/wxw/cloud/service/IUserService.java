@@ -1,7 +1,10 @@
 package com.wxw.cloud.service;
 
+import cn.hutool.captcha.LineCaptcha;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxw.cloud.domain.User;
+
+import java.io.OutputStream;
 
 /**
  * <p>
@@ -14,4 +17,6 @@ import com.wxw.cloud.domain.User;
 public interface IUserService extends IService<User> {
 
     Boolean checkUser(String data, Integer type);
+
+    LineCaptcha saveVerifyCode();
 }
