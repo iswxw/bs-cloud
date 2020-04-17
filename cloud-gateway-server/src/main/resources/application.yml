@@ -27,6 +27,12 @@ spring:
             - Path=/api/search/**   # 路由到搜索微服务
           filters:
             - StripPrefix=2
+        - id: cloud-user-service
+          uri: lb://cloud-user-service
+          predicates:
+            - Path=/api/user/**   # 路由到用户中心
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:

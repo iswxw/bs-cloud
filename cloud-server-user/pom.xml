@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>cloud-server-client</artifactId>
+    <artifactId>cloud-server-user</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>cloud-user-interface</module>
@@ -86,6 +86,11 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>1.1.19</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.1.tmp</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
