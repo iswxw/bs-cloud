@@ -19,4 +19,8 @@ public interface IUserService extends IService<User> {
     Boolean checkUser(String data, Integer type);
 
     LineCaptcha saveVerifyCode();
+
+    void register(User user, String code);
+
+    User queryUser(String username, String password);
 }

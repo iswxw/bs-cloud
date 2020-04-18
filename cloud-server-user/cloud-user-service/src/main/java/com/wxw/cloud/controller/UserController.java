@@ -2,20 +2,19 @@ package com.wxw.cloud.controller;
 
 
 import cn.hutool.captcha.LineCaptcha;
+import com.wxw.cloud.domain.User;
 import com.wxw.cloud.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.awt.image.BufferedImage;
 import java.io.Console;
 import java.io.IOException;
@@ -69,13 +68,21 @@ public class UserController {
         }
     }
 
+    @ApiOperation("用户注册")
+    @PostMapping("register")
+    public ResponseEntity<Void> register(@RequestBody @Valid User user, @RequestParam("code")String code){
+           this.userService.register(user,code);
+           return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
-
-    @ApiOperation("验证码校验")
-    @GetMapping("valid/{code}")
-    public ResponseEntity<String> volidCode(@PathVariable("code")String code){
-
-          return null;
+    @ApiOperation("根据用户名和密码查询指定用户")
+    @GetMapping("query")
+    public ResponseEntity<User> volidCode(@RequestParam("username") String username, @RequestParam("passward") String password) {
+        User user = this.userService.queryUser(username, password);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
 }
