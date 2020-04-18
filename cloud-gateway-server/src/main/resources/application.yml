@@ -33,6 +33,12 @@ spring:
             - Path=/api/user/**   # 路由到用户中心
           filters:
             - StripPrefix=2
+        - id: cloud-auth-service
+            uri: lb://cloud-auth-service
+            predicates:
+              - Path=/api/auth/**   # 路由到鉴权中心
+            filters:
+              - StripPrefix=2
 
 eureka:
   client:
