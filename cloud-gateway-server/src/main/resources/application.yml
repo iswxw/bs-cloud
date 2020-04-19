@@ -34,11 +34,11 @@ spring:
           filters:
             - StripPrefix=2
         - id: cloud-auth-service
-            uri: lb://cloud-auth-service
-            predicates:
-              - Path=/api/auth/**   # 路由到鉴权中心
-            filters:
-              - StripPrefix=2
+          uri: lb://cloud-auth-service
+          predicates:
+            - Path=/api/auth/**   # 路由到鉴权中心
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
@@ -55,3 +55,15 @@ eureka:
     lease-renewal-interval-in-seconds: 30
     #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
     lease-expiration-duration-in-seconds: 90
+wxw:
+  jwt:
+    pubKeyPath: F:\Study_GO\BS2020\rsa\rsa.pub # 公钥地址
+    cookieName: BS_TOKEN
+  filter:  # 白名单
+    allowPaths:
+      - /api/auth
+      - /api/search
+      - /api/user/register
+      - /api/user/check
+      - /api/user/code
+      - /api/item

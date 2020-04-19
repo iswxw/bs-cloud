@@ -1,9 +1,16 @@
 server:
   port: 8087
+  servlet:
+    session:
+      cookie:
+        secure: false
+        http-only: false
 spring:
   application:
     name: cloud-auth-service
-
+    # 允许 feginclient重复
+  main:
+    allow-bean-definition-overriding: true
 eureka:
   client:
     service-url:
