@@ -1,5 +1,7 @@
 package com.wxw.cloud.filter;
 
+import cn.hutool.json.JSONUtil;
+import com.wxw.cloud.config.FilterProperties;
 import com.wxw.cloud.config.JwtProperties;
 import com.wxw.cloud.tools.CookieUtils;
 import com.wxw.cloud.tools.JwtUtils;
@@ -8,20 +10,30 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping;
+import org.springframework.cloud.gateway.support.ServerWebExchangeUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.PathContainer;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.pattern.PathPattern;
+import org.springframework.web.util.pattern.PathPatternParser;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
+import java.net.URI;
+import java.security.Principal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.*;
 
 /**
  * @Author: wxw
@@ -29,11 +41,14 @@ import java.util.Set;
  */
 @Component
 @Slf4j
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties({JwtProperties.class, FilterProperties.class})
 public class LoginFilter implements GlobalFilter, Ordered {
 
     @Resource
     private JwtProperties jwtProperties;
+
+    @Resource
+    private FilterProperties filterProperties;
 
     /**
      * 执行过滤器中的业务逻辑
@@ -46,14 +61,26 @@ public class LoginFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         // 获取request对象
         ServerHttpRequest request = exchange.getRequest();
+        // 获取白名单
+        List<String> allowsPaths = this.filterProperties.getAllowPaths();
+        // 获取请求路径
+        Map<String, Object> attributes = exchange.getAttributes();
+        String requestUrl = attributes.get(GATEWAY_ORIGINAL_REQUEST_URL_ATTR).toString();
+        log.info("请求URI地址：{},白名单信息：{}", requestUrl, JSONUtil.toJsonStr(allowsPaths));
+        for (String allowsPath : allowsPaths) {
+            if (StringUtils.contains(requestUrl,allowsPath)){
+                log.info("绿色通道",requestUrl);
+                return chain.filter(exchange);
+            }
+        }
         // 1.获取请求参数access-token
         String token = request.getQueryParams().getFirst(this.jwtProperties.getCookieName());
         log.info("入参token=>{}", token);
-        /*if (StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)){
             //3.如果不存在 : 认证失败
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return exchange.getResponse().setComplete(); // 请求结束
-        }*/
+        }
         try {
             JwtUtils.getInfoFromToken(token,this.jwtProperties.getPublicKey());
         } catch (Exception e) {
@@ -72,6 +99,6 @@ public class LoginFilter implements GlobalFilter, Ordered {
      */
     @Override
     public int getOrder() {
-        return 10;
+        return 2;
     }
 }

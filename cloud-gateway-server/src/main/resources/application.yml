@@ -57,8 +57,8 @@ eureka:
     lease-expiration-duration-in-seconds: 90
 wxw:
   jwt:
-    pubKeyPath: F:\Study_GO\BS2020\rsa\rsa.pub # 公钥地址
-    cookieName: BS_TOKEN
+   pubKeyPath: F:\Study_GO\BS2020\rsa\rsa.pub # 公钥地址
+   cookieName: BS_TOKEN
   filter:  # 白名单
     allowPaths:
       - /api/auth
@@ -67,3 +67,4 @@ wxw:
       - /api/user/check
       - /api/user/code
       - /api/item
+      - /api-docs
