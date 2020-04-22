@@ -39,6 +39,12 @@ spring:
             - Path=/api/auth/**   # 路由到鉴权中心
           filters:
             - StripPrefix=2
+        - id: cloud-server-cart
+          uri: lb://cloud-server-cart
+          predicates:
+            - Path=/api/cart/**   # 路由到购物车
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:
@@ -68,3 +74,4 @@ wxw:
       - /api/user/code
       - /api/item
       - /api-docs
+      - /api/cart

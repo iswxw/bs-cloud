@@ -15,6 +15,7 @@
         <module>cloud-server-search</module>
         <module>cloud-server-user</module>
         <module>cloud-server-auth</module>
+        <module>cloud-server-cart</module>
     </modules>
     <packaging>pom</packaging>
 
