@@ -212,4 +212,9 @@ public class GoodsServiceImpl implements IGoodsService {
         return this.spuMapper.selectById(id);
     }
 
+    @Override
+    public Sku querySkuBySkuId(Long skuId) {
+        return this.skuMapper.selectById(skuId);
+    }
+
 }

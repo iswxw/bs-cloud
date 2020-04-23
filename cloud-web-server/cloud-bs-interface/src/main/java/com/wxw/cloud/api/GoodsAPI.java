@@ -40,5 +40,9 @@ public interface GoodsAPI {
     @GetMapping("{id}")
     public Spu querySpuById(@PathVariable("id")Long id);
 
+    @GetMapping("sku/{skuId}")
+    //@ApiOperation("根据skuId查询SKU商品信息")
+    public  Sku querySkuBySkuId(@PathVariable("skuId")Long skuId);
+
 
 }

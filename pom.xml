@@ -16,6 +16,7 @@
         <module>cloud-server-user</module>
         <module>cloud-server-auth</module>
         <module>cloud-server-cart</module>
+        <module>cloud-server-order</module>
     </modules>
     <packaging>pom</packaging>
 
