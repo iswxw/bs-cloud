@@ -1,8 +1,11 @@
 package com.wxw.cloud.config;
 
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -11,6 +14,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Getter
 @Setter
+@ToString
 @ConfigurationProperties(prefix = "wxw.pay")
 public class AliPayProperties {
 
@@ -35,8 +39,24 @@ public class AliPayProperties {
     // 字符编码
     private String charset;
 
+    // 字符类型
+    private String format;
+
     // 网关地址
     private String gatewayUrl;
 
+    private AlipayClient alipayClient;
+
+    public AliPayProperties build(){
+        this.alipayClient = new DefaultAlipayClient(
+                getGatewayUrl(),
+                getAppId(),
+                getPrivateKey(),
+                getFormat(),
+                getCharset(),
+                getPublicKey(),
+                getSignType());
+        return this;
+    }
 
 }

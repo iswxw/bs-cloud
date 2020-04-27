@@ -77,7 +77,7 @@ public class Address implements Serializable {
      * 是否是默认地址
      */
     @TableField("defaultAddress")
-    private Integer defaultAddress;
+    private Boolean defaultAddress;
 
 
 }

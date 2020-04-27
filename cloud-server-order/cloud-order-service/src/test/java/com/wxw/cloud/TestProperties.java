@@ -27,6 +27,8 @@ public class TestProperties {
     @Test
     public void TestProp(){
         System.out.println(aliPayProperties.getAppId());
+        AliPayProperties build = aliPayProperties.build();
+        System.out.println(build);
     }
 
     @Test
@@ -37,5 +39,7 @@ public class TestProperties {
         System.out.println("nextId = " +"1254703554690682880".length());
         System.out.println("nextId = " +"1048108312895295488".length());
     }
+
+
 
 }
