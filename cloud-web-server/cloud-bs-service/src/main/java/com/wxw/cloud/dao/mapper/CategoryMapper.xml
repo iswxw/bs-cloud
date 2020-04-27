@@ -3,7 +3,7 @@
 <mapper namespace="com.wxw.cloud.dao.CategoryMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wxw.cloud.domain.Category">
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.Category">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="parent_id" property="parentId" />

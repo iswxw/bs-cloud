@@ -45,6 +45,12 @@ spring:
             - Path=/api/cart/**   # 路由到购物车
           filters:
             - StripPrefix=2
+        - id: cloud-order-service
+          uri: lb://cloud-order-service
+          predicates:
+            - Path=/api/order/**   # 路由到系统
+          filters:
+            - StripPrefix=2
 
 eureka:
   client:

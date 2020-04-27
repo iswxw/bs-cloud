@@ -3,7 +3,7 @@
 <mapper namespace="com.wxw.cloud.dao.StockMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wxw.cloud.domain.Stock">
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.Stock">
         <id column="sku_id" property="skuId" />
         <result column="seckill_stock" property="seckillStock" />
         <result column="seckill_total" property="seckillTotal" />

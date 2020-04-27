@@ -3,7 +3,7 @@
 <mapper namespace="com.wxw.cloud.dao.SkuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wxw.cloud.domain.Sku">
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.Sku">
         <id column="id" property="id" />
         <result column="spu_id" property="spuId" />
         <result column="title" property="title" />

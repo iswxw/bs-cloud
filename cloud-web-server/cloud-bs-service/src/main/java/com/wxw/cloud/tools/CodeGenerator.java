@@ -78,7 +78,7 @@ public class CodeGenerator {
         // 4，包名策略配置  注意不同的模块生成时要修改对应模块包名
         PackageConfig pc = new PackageConfig();
         pc.setParent(null)
-                .setEntity("com.wxw.cloud.domain")
+                .setEntity("com.wxw.cloud.com.wxw.cloud.domain")
                 .setController("com.wxw.cloud.controller")
                 .setMapper("com.wxw.cloud.dao")
                 .setXml("com.wxw.cloud.dao.mapper")

@@ -1,0 +1,47 @@
+server:
+  port: 8089
+spring:
+  profiles:
+    active: dev
+  application:
+    name: cloud-order-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/bs-wxw?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://bs.wxw.com:10086/eureka
+  instance:
+    #避免显示主机名
+    instance-id: cloud-order-service
+    #显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔，单位为秒（默认30秒）
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳后等待时间上线，单位为秒（默认为90秒），超时将剔除服务
+    lease-expiration-duration-in-seconds: 90
+
+wxw:
+   jwt:
+     pubKeyPath: F:\Study_GO\BS2020\rsa\rsa.pub # 公钥地址
+     cookieName: BS_TOKEN
+   pay:
+     appId: 2016101900720463
+     # 商户私钥
+     privateKey: MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC4LxaPj90rGIaXZAfPxUfPEdSGuke1Qq8IP/EyuSKXklsamc8DfTY68jOgr6J6VVEOq0ad7WhiDNhRBcFDaCBSV5Gmm6/WdnjOip+OTgmy7q1d6jkPhj7zZxjHzfMinQiYhoW1kfazhWuligIF8SOJ8luTB9rPVTWjWh6f5DwLAQNUw08IWB6BX8f0jhNB3EO3xMqLjmWeqXD4B/8S8PXAKT0hlbZg3P6K4f2VLFWOiAtwVe1rSZbxH3SH8XcrlV8vnm6wR3SpLfyzgyQ3yRzxoJJV1xhSgKbx/UscDvbtowNl3ReBGQ3kExNZuPuO1vMfT/Mw4JOmtmtbXxJkGlDhAgMBAAECggEBAJu1i2AxIqxlXpusQIJhaTThAQgpgaf2yRyzWgkkxN7ZJ1YUxBNSDr/EtOrasQS1DgLVv6yR4ZZK/7F3qQyAghq613K/2eb4X2dVgFCBHuf7qetksXqzZpLGDQgVz7/qfDLePzniPWtFl1zqkI1PcFkV4F8r28s+YUtJS+ymujAd57q7SC0ggNpI8ZoKOBWbFCi8BEwvqWdCwu8A0g9z1EeZJDIiBnov1LtCiSbOHJ+kPcc/kyAYjq0nbk3ZuFlnanFuu/CojF6G9jpiLwJn7xtLuHu5sfBq/wY2Vd/nt7iztP7Z3XwVMZPWngqiDduVutDnhnhbYkH6zkrtVdqlSwUCgYEA9/5eFwqSmsK5/shmWoezulIi8/Y1CaD25hipMSlfASSEmrl+L24MJDTE7cYGm9R8MldjQB/OmnDf31rlG205NY0ehAmgQZlaykoJO5qoU1TiUllDfMS48yWoJrKnAHq7AvK7sl7PjUP3WNny6dDPSEBlr020I446u7Uvti+DQoMCgYEAviFXrlbl9JVdOvUgJeIY7f7wtdr1GI4KsR9PbB4m9ZXnCEFoanGKnLGOmZUSILzf6geG5stMo5EGZaOEsb6qgke5Xc+hWYlbZtujXeTNR0tFMqsQrW4bUWAfeEhHYpcYyWAKAlCpAD58Kyj+yLBcF38NMv/7s8/0W+mldjNYscsCgYAtAdclq1+MAscqvEgHKhWuPPXm/MoHY1Ur0VHzgCSj2nLOedey1/AQKhuLY6MTaO7ZXA7BNoSSduXKbX6jCaGWXHQrVmvlO+XETMd8L8dYyFECzPx4imNejXkE/OteJOgH0vHJn3dflfQwBe4WDTVxUW6i8CE/SrLSGkH8eIcD7QKBgDrcVam6a0xx5T/4XTB9M5ySfXC/TXuBldvJxqvBFeyXsMOEhE/XwMLL0UrItKj/8A4isGfI7nwAzMsweUcRsPXOQJvDSL9QX8STIJtT1x1INy79eJdIbBqgOH3jWn4yKtFE8zRORlO2BHjUIzR8LLZ1dd+hEgpTyeGejsPuF3pLAoGBAMJ1uTNCEJKCCUT3knYeZtHpYlxF3+mPo4GWj0rOCI0L7xBi5RjCxmHM20zhUkl79/doQb4IjPhXoDgz+RJ6ECUDTPnoyR9HgR5DmWZ/fFV33H7obCqMMJz3QiiMs444pfGnI/SVYBJmy2F8UPa9KWSlJuXJNCuX4Yc+lzXGNJYl
+     # 支付宝公钥
+     publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlOAcWfEvrGzKUUEE7fe+S+KLv+tBKFI94ZatDld9IVqSo3gZTCMtFKUDvaIHlr82gQJC5cpJbe6mzE7TGh+pW4c3hh9gAYF7gbbbGg4HRt/CuzKjQOoHyhYY2k/XhzR0oSd+5ze1kLkQfYPOPb8/7SzOKGk6VbeWVoJMakZRJndr4gMwQ84bytsCoF6QE3gkk70RkXDez75EfTVKMeab/LUBrJCK+zLR2xevXSLTlCrP7lsCWSLv8Hs/SKkcEO4Os5zI4cJBmS++PLBL8kdhE+584zNwY8ECbk83Yg0fl5vSjpgM4EC+a6f7aCpPRxpl+2iebhKspEVcZLLfo5rbIwIDAQAB
+     # 支付结果异步通知
+     notifyUrl: http://localhost:8080/alipay/alipayNotifyNotice.action
+     # 返回地址
+     returnUrl: http://localhost:8080/alipay/alipayReturnNotice.action
+      # 签名类型
+     signType: RSA2
+     charset: UTF-8
+     gatewayUrl: https://openapi.alipaydev.com/gateway.do
+
+

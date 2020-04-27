@@ -3,7 +3,7 @@
 <mapper namespace="com.wxw.cloud.dao.SpecGroupMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wxw.cloud.domain.SpecGroup">
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.SpecGroup">
         <id column="id" property="id" />
         <result column="cid" property="cid" />
         <result column="name" property="name" />
