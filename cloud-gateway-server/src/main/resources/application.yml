@@ -48,7 +48,7 @@ spring:
         - id: cloud-order-service
           uri: lb://cloud-order-service
           predicates:
-            - Path=/api/order/**   # 路由到系统
+            - Path=/api/order/**   # 路由到订单系统
           filters:
             - StripPrefix=2
 
@@ -81,3 +81,4 @@ wxw:
       - /api/item
       - /api-docs
       - /api/cart
+      - /api/order

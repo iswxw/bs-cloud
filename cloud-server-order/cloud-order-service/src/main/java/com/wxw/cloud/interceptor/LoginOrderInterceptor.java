@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  * @create: 2020-04-27-17:37
  */
 @Component
-@EnableConfigurationProperties({JwtProperties.class})
-public class LoginInterceptor extends HandlerInterceptorAdapter {
+@EnableConfigurationProperties(value = {JwtProperties.class})
+public class LoginOrderInterceptor extends HandlerInterceptorAdapter {
 
     @Resource
     private JwtProperties jwtProperties;
@@ -31,7 +31,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         String token = CookieUtils.getCookieValue(request, this.jwtProperties.getCookieName());
         // 解析token, 获取用户信息
         UserInfo userInfo = JwtUtils.getInfoFromToken(token, this.jwtProperties.getPublicKey());
-        if (userInfo == null){
+        if (userInfo == null) {
             return false;
         }
         // 将userinfo 存入线程本地变量中
@@ -39,7 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    public static UserInfo getUserinfo(){
+    public static UserInfo getUserinfo() {
         return THREAD_LOCAL.get();
     }
 

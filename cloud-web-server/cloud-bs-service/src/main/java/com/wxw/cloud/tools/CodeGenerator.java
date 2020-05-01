@@ -24,6 +24,7 @@ public class CodeGenerator {
     public static String webPath="/cloud-web-server/cloud-bs-service/src/main/java";
     public static String userPath="/cloud-server-user/cloud-user-service/src/main/java";
     public static String orderPath="/cloud-server-order/cloud-order-service/src/main/java";
+    public static String testPath="/test";
     /**
      * 读取控制台内容
      */
@@ -47,7 +48,7 @@ public class CodeGenerator {
         //获取程序当前路径
         String projectPath = System.getProperty("user.dir");
         System.out.println(projectPath);
-              gc.setOutputDir(projectPath+orderPath)
+              gc.setOutputDir(projectPath+testPath)
                 .setAuthor("WXW")
                 .setEnableCache(false)
                 .setFileOverride(true)

@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @Author: wxw
  * @create: 2020-03-15-0:24
  * Swagger2API文档的配置
- *  bs.wxw.com:8083/swagger-ui.html
+ *  bs.wxw.com:8089/swagger-ui.html
  */
 
 @Configuration

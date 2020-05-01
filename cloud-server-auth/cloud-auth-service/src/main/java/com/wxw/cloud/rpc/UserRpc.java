@@ -9,4 +9,5 @@ import org.springframework.cloud.openfeign.FeignClient;
  */
 @FeignClient("cloud-user-service")
 public interface UserRpc extends UserClient {
+
 }

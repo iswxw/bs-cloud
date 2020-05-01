@@ -1,6 +1,6 @@
 package com.wxw.cloud.config;
 
-import com.wxw.cloud.interceptor.LoginInterceptor;
+import com.wxw.cloud.interceptor.LoginOrderInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 public class WebConfiguration implements WebMvcConfigurer {
 
     @Resource
-    private LoginInterceptor loginInterceptor;
+    private LoginOrderInterceptor loginInterceptor;
 
     /**
      * 定义拦截器

@@ -43,9 +43,9 @@ public class Swagger2Config {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("微服务接口API在线文档")
-                .description("Welcome in http://bs.wxw.com:8082/swagger-ui.html")
+                .description("Welcome in http://bs.wxw.com:8088/swagger-ui.html")
                 .contact("购物车微服务")
-                .version("1.0")
+                .version("2.0")
                 .build();
     }
 }
