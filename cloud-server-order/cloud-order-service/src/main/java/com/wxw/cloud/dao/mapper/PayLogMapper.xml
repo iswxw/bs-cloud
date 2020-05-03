@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxw.cloud.dao.PayLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.PayLog">
+        <id column="order_id" property="orderId" />
+        <result column="total_fee" property="totalFee" />
+        <result column="user_id" property="userId" />
+        <result column="transaction_id" property="transactionId" />
+        <result column="status" property="status" />
+        <result column="pay_type" property="payType" />
+        <result column="bank_type" property="bankType" />
+        <result column="create_time" property="createTime" />
+        <result column="pay_time" property="payTime" />
+        <result column="closed_time" property="closedTime" />
+        <result column="refund_time" property="refundTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        order_id, total_fee, user_id, transaction_id, status, pay_type, bank_type, create_time, pay_time, closed_time, refund_time
+    </sql>
+
+</mapper>

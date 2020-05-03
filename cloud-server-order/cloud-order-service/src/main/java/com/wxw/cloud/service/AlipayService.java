@@ -4,6 +4,9 @@ import com.alipay.api.AlipayApiException;
 import com.wxw.cloud.domain.Order;
 import com.wxw.cloud.domain.OrderDetail;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
+
 /**
  * 支付接口
  */
@@ -14,12 +17,12 @@ public interface AlipayService {
      *
      * @param orderId        订单编号
      * @param refundReason   退款原因
-     * @param totalPay       退款金额
+     * @param refundAmount       退款金额
      * @param reqNo 标识一次退款请求，同一笔交易多次退款需要保证唯一，如需部分退款，则此参数必传
      * @return
      * @throws AlipayApiException
      */
-    String refund(String orderId,String refundReason,Integer totalPay,String reqNo) throws AlipayApiException;
+    String refund(String orderId,String refundReason,String refundAmount,String reqNo) throws AlipayApiException;
 
     /**
      *  根据订单编号查询交易号
@@ -47,4 +50,7 @@ public interface AlipayService {
      * @return
      */
     String getAliPayClient(Order order, OrderDetail orderDetail);
+
+    // 支付宝同步通知页面
+    void getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams);
 }

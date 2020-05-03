@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wxw.cloud.dao.OrderDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wxw.cloud.com.wxw.cloud.domain.OrderDetail">
+        <id column="id" property="id" />
+        <result column="order_id" property="orderId" />
+        <result column="sku_id" property="skuId" />
+        <result column="num" property="num" />
+        <result column="title" property="title" />
+        <result column="own_spec" property="ownSpec" />
+        <result column="price" property="price" />
+        <result column="image" property="image" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, order_id, sku_id, num, title, own_spec, price, image
+    </sql>
+
+</mapper>
