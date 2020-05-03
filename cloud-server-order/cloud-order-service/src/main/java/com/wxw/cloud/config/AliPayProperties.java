@@ -47,7 +47,7 @@ public class AliPayProperties {
 
     private AlipayClient alipayClient;
 
-    public AliPayProperties build(){
+    public AlipayClient build(){
         this.alipayClient = new DefaultAlipayClient(
                 getGatewayUrl(),
                 getAppId(),
@@ -56,7 +56,7 @@ public class AliPayProperties {
                 getCharset(),
                 getPublicKey(),
                 getSignType());
-        return this;
+        return alipayClient;
     }
 
 }

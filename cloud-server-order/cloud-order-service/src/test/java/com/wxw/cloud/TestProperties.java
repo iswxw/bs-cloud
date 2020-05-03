@@ -2,6 +2,7 @@ package com.wxw.cloud;
 
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
+import com.alipay.api.AlipayClient;
 import com.wxw.cloud.config.AliPayProperties;
 import com.wxw.cloud.config.JwtProperties;
 import com.wxw.cloud.tools.IdWorker;
@@ -31,12 +32,14 @@ public class TestProperties {
     @Test
     public void TestProp(){
         System.out.println(aliPayProperties.getAppId());
-        AliPayProperties build = aliPayProperties.build();
-        System.out.println(build.getAppId());
+        AlipayClient build = aliPayProperties.build();
+        System.out.println(build.toString());
 
         String cookieName = jwtProperties.getCookieName();
         System.out.println("cookieName = " + cookieName);
         System.out.println("jwtProperties = " + jwtProperties.getPubKeyPath());
+
+
     }
 
 

@@ -1,21 +1,14 @@
 package com.wxw.cloud.service;
 
 import com.alipay.api.AlipayApiException;
+import com.wxw.cloud.domain.Order;
+import com.wxw.cloud.domain.OrderDetail;
 
 /**
  * 支付接口
  */
 public interface AlipayService {
 
-    /**
-     *  web端订单支付
-     * @param orderId    订单编号（唯一）
-     * @param totalPay   订单价格
-     * @param title      商品标题
-     * @return
-     * @throws Exception
-     */
-    String webPagePay(String orderId,Integer totalPay,String title) throws Exception;
 
     /**
      *
@@ -47,4 +40,11 @@ public interface AlipayService {
      */
     String refundQuery(String orderId,String reqNo) throws AlipayApiException;
 
+    /**
+     *  web端订单支付
+     * @param order
+     * @param orderDetail
+     * @return
+     */
+    String getAliPayClient(Order order, OrderDetail orderDetail);
 }
