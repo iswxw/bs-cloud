@@ -52,5 +52,7 @@ public interface AlipayService {
     String getAliPayClient(Order order, OrderDetail orderDetail);
 
     // 支付宝同步通知页面
-    void getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams);
+    Boolean getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams);
+    // 支付宝 异步通知页面
+    Boolean getNotifyUrl(HttpServletRequest request,Map<String, String> params, Map<String, String[]> requestParams)  throws Exception;
 }

@@ -9,6 +9,7 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.request.AlipayTradeRefundRequest;
 import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
+import com.alipay.api.response.AlipayTradePagePayResponse;
 import com.alipay.api.response.AlipayTradeQueryResponse;
 import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.wxw.cloud.config.AliPayProperties;
@@ -108,9 +109,9 @@ public class AlipayServiceImpl implements AlipayService {
         try {
             //设置请求参数
             AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-            /** 异步通知，支付完成后，需要进行的异步处理*/
-            alipayRequest.setReturnUrl(aliPayProperties.getReturnUrl());
             /** 同步通知，支付完成后，支付成功页面*/
+            alipayRequest.setReturnUrl(aliPayProperties.getReturnUrl());
+            /** 异步通知，支付完成后，需要进行的异步处理*/
             alipayRequest.setNotifyUrl(aliPayProperties.getNotifyUrl());
             PayReq payReq = new PayReq();
             payReq.setProduct_code("FAST_INSTANT_TRADE_PAY");
@@ -122,8 +123,11 @@ public class AlipayServiceImpl implements AlipayService {
             payReq.setSubject(orderDetail.getTitle());
             String reqJSON = JSON.toJSONString(payReq);
             alipayRequest.setBizContent(reqJSON);
-            String result = alipayClient.pageExecute(alipayRequest).getBody();
-            return result;
+            AlipayTradePagePayResponse pagePay = alipayClient.pageExecute(alipayRequest);
+            if (pagePay.isSuccess()){
+                return pagePay.getBody();
+            }
+            return pagePay.getMsg();
         } catch (AlipayApiException e) {
            log.error("第三方支付发生异常：=>{}", e);
            return null;
@@ -131,7 +135,7 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     @Override
-    public void getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams) {
+    public Boolean getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams) {
         try {
             for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
                 String name = (String) iter.next();
@@ -144,7 +148,7 @@ public class AlipayServiceImpl implements AlipayService {
                 //乱码解决，这段代码在出现乱码时使用
                 valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
                 params.put(name, valueStr);
-                log.info("返回支付链接：{}",values);
+                log.info("返回支付链接：{}",values.toString());
             }
             boolean signVerified = AlipaySignature.rsaCheckV1(params,aliPayProperties.getPublicKey(),aliPayProperties.getCharset(),aliPayProperties.getSignType());
             if (signVerified){
@@ -156,11 +160,70 @@ public class AlipayServiceImpl implements AlipayService {
                 String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
                 //修改订单状态 改为 支付成功，已付款; 同时新增支付流水
 
-                log.info("出参：{}", out_trade_no);
+                log.info("********************** 支付成功(支付宝同步通知) **********************");
+                log.info("* 订单号: {}", out_trade_no);
+                log.info("* 支付宝交易号: {}", trade_no);
+                log.info("* 实付金额: {}", total_amount);
+                log.info("***************************************************************");
+            }else {
+                log.info("支付, 验签失败...");
+                return false;
             }
-
+            return true;
         } catch (Exception e) {
-            log.info("支付, 验签失败...");
+            log.info("支付, 验签发生异常：{}",e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean getNotifyUrl(HttpServletRequest request,Map<String, String> params, Map<String, String[]> requestParams) throws Exception{
+        try {
+            for (Iterator<String> iter = requestParams.keySet().iterator(); iter.hasNext();) {
+                String name = (String) iter.next();
+                String[] values = (String[]) requestParams.get(name);
+                String valueStr = "";
+                for (int i = 0; i < values.length; i++) {
+                    valueStr = (i == values.length - 1) ? valueStr + values[i]
+                            : valueStr + values[i] + ",";
+                }
+                //乱码解决，这段代码在出现乱码时使用
+                //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+                params.put(name, valueStr);
+            }
+            boolean signVerified = AlipaySignature.rsaCheckV1(params,aliPayProperties.getPublicKey(),aliPayProperties.getCharset(),aliPayProperties.getSignType());
+            if (signVerified){ // 如果验签成功
+                //商户订单号
+                String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+                //支付宝交易号
+                String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+
+                //交易状态
+                String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+
+                //付款金额
+                String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
+
+                if(trade_status.equals("TRADE_FINISHED")){
+
+                }else if (trade_status.equals("TRADE_SUCCESS")){
+
+                    log.info("********************** 支付成功(支付宝异步通知) **********************");
+                    log.info("* 订单号: {}", out_trade_no);
+                    log.info("* 支付宝交易号: {}", trade_no);
+                    log.info("* 实付金额: {}", total_amount);
+                    log.info("* 订单状态: {}", trade_status);
+                    log.info("***************************************************************");
+                }
+                log.info("支付成功...");
+                return true;
+            }else {
+                log.info("支付, 验签失败...");
+                return false;
+            }
+        } catch (Exception e) {
+            log.info("支付, 验签发生异常：{}",e);
+            return false;
         }
     }
 }

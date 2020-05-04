@@ -22,9 +22,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -51,7 +53,7 @@ public class OrderController {
     @ApiOperation(value = "创建订单接口，返回订单编号",notes = "创建订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "order",required = true,value = "订单的json对象，包含订单条目和物流信息"),
-            @ApiImplicitParam(name = "tag",required = true,value = "是否是秒杀订单")
+            @ApiImplicitParam(name = "seck",required = true,value = "是否是秒杀订单")
     })
     public ResponseEntity<List<Long>> createOrder(@RequestParam("seck") String seck, @RequestBody @Valid Order order){
         // 查询库存
@@ -113,9 +115,9 @@ public class OrderController {
 
     @ApiOperation("前往支付宝进行支付")
     @GetMapping( "goAlipay")
-    public ResponseEntity<String> goAliPay(@RequestParam("orderId") Long orderId){
+    public ResponseEntity<String> goAliPay(@RequestParam("orderId") String orderId){
             //1. 查询订单
-            Order order = this.orderService.queryOrderById(orderId);
+            Order order = this.orderService.queryOrderById(Long.valueOf(orderId));
             //2. 查询订单详情
             QueryWrapper<OrderDetail> wrapper = new QueryWrapper<>();
             wrapper.eq("order_id", orderId);
@@ -153,7 +155,7 @@ public class OrderController {
         Result<String> result = new Result<>();
         try {
             String query = this.alipayService.query(orderId);
-            return result.success(query,"交易查询成功");
+            return result.success(JSON.toJSONString(query),"交易查询成功");
         } catch (Exception e) {
             log.error("查询交易异常");
             return result.fail(e.getMessage());
@@ -172,7 +174,7 @@ public class OrderController {
         try {
             log.info("退款入参4：{}",refundAmount);
             String refund = this.alipayService.refund(orderId, refundReason, refundAmount, reqNo);
-            return result.success(refund,"退款成功");
+            return result.success(JSON.toJSONString(refund),"退款成功");
         } catch (AlipayApiException e) {
             log.error("退款失败：{}", e);
             return result.fail(e.getMessage());
@@ -207,17 +209,47 @@ public class OrderController {
             return result.fail("交易关闭失败");
         }
     }
-
-    @ApiOperation("支付宝同步通知页面")
-    @PostMapping("ReturnNotice")
-    public String alipayReturnNotice(HttpServletRequest request){
+    @ApiIgnore
+    //@ApiOperation("支付宝同步通知页面")
+    @RequestMapping("ReturnNotice")
+    @ResponseBody
+    public Result<String> alipayReturnNotice(HttpServletRequest request,HttpServletResponse response){
        log.info("支付成功，进入同步通知接口");
-        //获取支付宝GET过来反馈信息
-        Map<String,String> params = new HashMap<String,String>();
-        Map<String,String[]> requestParams = request.getParameterMap();
-        this.alipayService.getReturnUrl(request, params, requestParams);
-
-        return "";
+        Result<String> result = new Result<>();
+        try {
+            //获取支付宝GET过来反馈信息
+            Map<String,String> params = new HashMap<String,String>();
+            Map<String,String[]> requestParams = request.getParameterMap();
+            Boolean returnUrl = this.alipayService.getReturnUrl(request, params, requestParams);
+            if (!returnUrl){
+                return result.fail("同步通知回调失败");
+            }
+            return result.success();
+        } catch (Exception e) {
+            log.error("异步回调发生异常：{}", e);
+            return result.fail(e.getMessage());
+        }
+    }
+    @ApiIgnore
+    //@ApiOperation("支付宝异步 通知页面")
+    @ResponseBody
+    @RequestMapping("NotifyNotice")
+    public Result<String> alipayNotify(HttpServletRequest request, HttpServletResponse response){
+        log.info("支付成功, 进入异步通知接口...");
+        Result<String> result = new Result<>();
+        try {
+            //获取支付宝POST过来反馈信息
+            Map<String,String> params = new HashMap<String,String>();
+            Map<String,String[]> requestParams = request.getParameterMap();
+            Boolean notifyUrl = this.alipayService.getNotifyUrl(request, params, requestParams);
+            if (notifyUrl){
+                return result.success();
+            }
+            return result.fail("异步回调失败");
+        } catch (Exception e) {
+            log.error("异步回调发生异常：{}", e);
+            return result.fail(e.getMessage());
+        }
     }
 
 
