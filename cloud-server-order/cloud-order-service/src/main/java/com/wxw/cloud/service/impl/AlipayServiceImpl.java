@@ -4,23 +4,21 @@ import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
-import com.alipay.api.request.AlipayTradeFastpayRefundQueryRequest;
-import com.alipay.api.request.AlipayTradePagePayRequest;
-import com.alipay.api.request.AlipayTradeQueryRequest;
-import com.alipay.api.request.AlipayTradeRefundRequest;
-import com.alipay.api.response.AlipayTradeFastpayRefundQueryResponse;
-import com.alipay.api.response.AlipayTradePagePayResponse;
-import com.alipay.api.response.AlipayTradeQueryResponse;
-import com.alipay.api.response.AlipayTradeRefundResponse;
+import com.alipay.api.request.*;
+import com.alipay.api.response.*;
 import com.wxw.cloud.config.AliPayProperties;
 import com.wxw.cloud.domain.Order;
 import com.wxw.cloud.domain.OrderDetail;
 import com.wxw.cloud.service.AlipayService;
+import com.wxw.cloud.service.IOrderService;
+import com.wxw.cloud.service.IPayLogService;
 import com.wxw.cloud.tools.PayReq;
 import com.wxw.cloud.tools.RefundReq;
+import com.wxw.cloud.tools.TradeStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
@@ -41,6 +39,12 @@ public class AlipayServiceImpl implements AlipayService {
 
     @Resource
     private AliPayProperties aliPayProperties;
+
+    @Resource
+    private IPayLogService payLogService;
+
+    @Resource
+    private IOrderService orderService;
 
     @Override
     public String refund(String orderId, String refundReason, String refundAmount, String reqNo) throws AlipayApiException {
@@ -82,7 +86,17 @@ public class AlipayServiceImpl implements AlipayService {
 
     @Override
     public String close(String orderId) throws AlipayApiException {
-        return null;
+        /** 调取支付宝接口 web端支付*/
+        AlipayClient alipayClient = aliPayProperties.build();
+        AlipayTradeCloseRequest alipayRequest = new AlipayTradeCloseRequest();
+        PayReq payReq = new PayReq();
+        payReq.setOut_trade_no(orderId);
+        alipayRequest.setBizContent(JSON.toJSONString(payReq));
+        AlipayTradeCloseResponse execute = alipayClient.execute(alipayRequest);
+        if (!execute.isSuccess()){
+             throw new AlipayApiException(execute.getSubMsg());
+        }
+        return execute.getBody();
     }
 
     @Override
@@ -102,11 +116,12 @@ public class AlipayServiceImpl implements AlipayService {
     }
 
     // 支付第三方
+    @Transactional
     @Override
-    public String getAliPayClient(Order order, OrderDetail orderDetail) {
+    public String getAliPayClient(Order order, OrderDetail orderDetail) throws Exception {
         // 1.初始化支付客户端
         AlipayClient alipayClient = aliPayProperties.build();
-        try {
+
             //设置请求参数
             AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
             /** 同步通知，支付完成后，支付成功页面*/
@@ -117,21 +132,18 @@ public class AlipayServiceImpl implements AlipayService {
             payReq.setProduct_code("FAST_INSTANT_TRADE_PAY");
             // 1c 表示当天有效
             payReq.setTimeout_express("1c");
-            payReq.setBody("用户订购商品个数"+orderDetail.getNum());
+            payReq.setBody("用户订购商品个数: "+orderDetail.getNum());
             payReq.setTotal_amount(order.getActualPay().toString());
             payReq.setOut_trade_no(order.getOrderId().toString());
             payReq.setSubject(orderDetail.getTitle());
             String reqJSON = JSON.toJSONString(payReq);
             alipayRequest.setBizContent(reqJSON);
             AlipayTradePagePayResponse pagePay = alipayClient.pageExecute(alipayRequest);
-            if (pagePay.isSuccess()){
-                return pagePay.getBody();
+            log.info("支付出参参数：{}", pagePay.isSuccess());
+            if (!pagePay.isSuccess()){
+                throw new AlipayApiException(pagePay.getSubMsg());
             }
-            return pagePay.getMsg();
-        } catch (AlipayApiException e) {
-           log.error("第三方支付发生异常：=>{}", e);
-           return null;
-        }
+            return pagePay.getBody();
     }
 
     @Override
@@ -158,18 +170,20 @@ public class AlipayServiceImpl implements AlipayService {
                 String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
                 //付款金额
                 String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
-                //修改订单状态 改为 支付成功，已付款; 同时新增支付流水
 
+                Integer trade_status = 1;
+                //修改订单状态 改为 支付成功，已付款; 同时新增支付流水
+                this.payLogService.updatePayLog(out_trade_no,trade_status, trade_no, total_amount);
                 log.info("********************** 支付成功(支付宝同步通知) **********************");
                 log.info("* 订单号: {}", out_trade_no);
                 log.info("* 支付宝交易号: {}", trade_no);
                 log.info("* 实付金额: {}", total_amount);
                 log.info("***************************************************************");
+                return true;
             }else {
                 log.info("支付, 验签失败...");
                 return false;
             }
-            return true;
         } catch (Exception e) {
             log.info("支付, 验签发生异常：{}",e);
             return false;
@@ -205,9 +219,10 @@ public class AlipayServiceImpl implements AlipayService {
                 String total_amount = new String(request.getParameter("total_amount").getBytes("ISO-8859-1"),"UTF-8");
 
                 if(trade_status.equals("TRADE_FINISHED")){
-
+                  return false;
                 }else if (trade_status.equals("TRADE_SUCCESS")){
-
+                    Integer status = TradeStatus.getkey(trade_status);
+                    this.payLogService.updatePayLog(out_trade_no,status, trade_no, total_amount);
                     log.info("********************** 支付成功(支付宝异步通知) **********************");
                     log.info("* 订单号: {}", out_trade_no);
                     log.info("* 支付宝交易号: {}", trade_no);

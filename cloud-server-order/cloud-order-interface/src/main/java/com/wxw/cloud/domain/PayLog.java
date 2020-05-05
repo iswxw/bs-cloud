@@ -29,7 +29,7 @@ public class PayLog implements Serializable {
     /**
      * 订单号
      */
-    @TableId(value = "order_id", type = IdType.AUTO)
+    @TableId(value = "order_id")
     private Long orderId;
 
     /**
@@ -50,12 +50,12 @@ public class PayLog implements Serializable {
     /**
      * 交易状态，1 未支付, 2已支付, 3 已退款, 4 支付错误, 5 已关闭
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 支付方式，1 支付宝支付, 2 货到付款
      */
-    private Boolean payType;
+    private Integer payType;
 
     /**
      * 银行类型

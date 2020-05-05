@@ -49,7 +49,7 @@ public interface AlipayService {
      * @param orderDetail
      * @return
      */
-    String getAliPayClient(Order order, OrderDetail orderDetail);
+    String getAliPayClient(Order order, OrderDetail orderDetail) throws Exception;
 
     // 支付宝同步通知页面
     Boolean getReturnUrl(HttpServletRequest request, Map<String, String> params, Map<String, String[]> requestParams);

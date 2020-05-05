@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -55,15 +56,19 @@ public class OrderController {
             @ApiImplicitParam(name = "order",required = true,value = "订单的json对象，包含订单条目和物流信息"),
             @ApiImplicitParam(name = "seck",required = true,value = "是否是秒杀订单")
     })
-    public ResponseEntity<List<Long>> createOrder(@RequestParam("seck") String seck, @RequestBody @Valid Order order){
+    public ResponseEntity<List<String>> createOrder(@RequestParam("seck") String seck, @RequestBody @Valid Order order){
         // 查询库存
-        List<Long> skuId = this.orderService.queryStock(seck,order);
-        if (skuId.size() != 0){
+        List<Long> skuIds = this.orderService.queryStock(seck,order);
+        if (skuIds.size() != 0){
             //库存不足
-            return new ResponseEntity<>(skuId, HttpStatus.OK);
+            List<String> list = skuIds.stream().map(skuId -> {
+                return skuId.toString();
+            }).collect(Collectors.toList());
+
+            return new ResponseEntity<>(list, HttpStatus.OK);
         }
 
-        Long id = this.orderService.createOrder(seck,order);
+        String id = this.orderService.createOrder(seck,order).toString();
         return new ResponseEntity<>(Arrays.asList(id), HttpStatus.CREATED);
     }
 
@@ -114,19 +119,23 @@ public class OrderController {
     }
 
     @ApiOperation("前往支付宝进行支付")
-    @GetMapping( "goAlipay")
-    public ResponseEntity<String> goAliPay(@RequestParam("orderId") String orderId){
+    @GetMapping(value = "goAlipay",produces = "text/html; charset=UTF-8")
+    public String goAliPay(@RequestParam("orderId") String orderId){
+        try {
+            log.info("支付订单号：{}", orderId);
             //1. 查询订单
             Order order = this.orderService.queryOrderById(Long.valueOf(orderId));
             //2. 查询订单详情
             QueryWrapper<OrderDetail> wrapper = new QueryWrapper<>();
             wrapper.eq("order_id", orderId);
             OrderDetail orderDetail = this.orderDetailService.getOne(wrapper);
-            String result = this.alipayService.getAliPayClient(order, orderDetail);
-            if (StringUtils.isBlank(result)){
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-            return ResponseEntity.ok(result);
+            //log.info("订单=>{},||订单详情：{}", order,orderDetail);
+            String resp = this.alipayService.getAliPayClient(order, orderDetail);
+            return  resp;
+        } catch (Exception e) {
+            log.error("支付异常：{}",e);
+            return e.getMessage();
+        }
     }
 
     @ApiOperation("根据订单id查询其包含的skuId")
@@ -206,7 +215,7 @@ public class OrderController {
             return result.success(close,"交易关闭成功");
         } catch (AlipayApiException e) {
             log.info("交易关闭时出现异常",e);
-            return result.fail("交易关闭失败");
+            return result.fail(e.getMessage());
         }
     }
     @ApiIgnore

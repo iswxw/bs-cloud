@@ -1,7 +1,9 @@
 package com.wxw.cloud;
 
 import com.wxw.cloud.dao.AddressMapper;
+import com.wxw.cloud.dao.OrderStatusMapper;
 import com.wxw.cloud.domain.Address;
+import com.wxw.cloud.domain.OrderStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,12 +19,22 @@ public class TestDao {
     @Resource
     private AddressMapper addressMapper;
 
+    @Resource
+    private OrderStatusMapper orderStatusMapper;
+
     @Test
     public void TestSucces(){
         Address add = new Address();
         add.setId(1L);
         add.setAddress("北京市 大兴区");
         addressMapper.updateById(add);
+    }
+
+    // 测试订单状态
+    @Test
+    public void testStatus(){
+        OrderStatus orderStatus = this.orderStatusMapper.selectById(1257642387350622208l);
+        System.out.println(orderStatus);
     }
 
 }
