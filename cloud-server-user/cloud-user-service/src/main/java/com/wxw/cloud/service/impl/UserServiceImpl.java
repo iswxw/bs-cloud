@@ -62,7 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public LineCaptcha saveVerifyCode() {
         // 1.生成图像
-        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100, 4, 100);
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 50, 4, 100);
+        String img = lineCaptcha.getImageBase64();
         // 2.取得验证码
         String code = lineCaptcha.getCode();
         // 3，发送消息到mq

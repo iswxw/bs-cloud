@@ -2,16 +2,19 @@ package com.wxw.cloud.controller;
 
 
 import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.core.img.ImgUtil;
 import com.wxw.cloud.domain.User;
 import com.wxw.cloud.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -30,7 +33,6 @@ import java.io.OutputStream;
  */
 @Api(tags = "UserController", description = "用户中心")
 @RestController
-@RequestMapping("/user")
 @Slf4j
 public class UserController {
 
@@ -60,7 +62,9 @@ public class UserController {
             // 生成验证码图像
             LineCaptcha lineCaptcha = this.userService.saveVerifyCode();
             // 图形验证码写出到流
-            lineCaptcha.write(out);
+            //lineCaptcha.write(out);
+            BufferedImage bufferedImage = lineCaptcha.getImage();
+            ImageIO.write(bufferedImage,"PNG",out);
             out.flush(); // 将缓存中的数据立即强制刷新, 将缓冲区的数据输出到客户端浏览器
             out.close(); // 关闭输出流
         } catch (IOException e) {
@@ -69,14 +73,18 @@ public class UserController {
     }
 
     @ApiOperation("用户注册")
-    @PostMapping("register")
-    public ResponseEntity<Void> register(@RequestBody @Valid User user, @RequestParam("code")String code){
+    @PostMapping(value = "register",consumes = "application/x-www-form-urlencoded;charset=UTF-8")
+    public ResponseEntity<Void> register(@Valid User user, @RequestParam("code")String code){
+           log.info("入参1 user:{},入参2 code:{}",user,code);
+           if (user ==null|| StringUtils.isBlank(code)){
+               return ResponseEntity.badRequest().build();
+           }
            this.userService.register(user,code);
            return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @ApiOperation("根据用户名和密码查询指定用户")
-    @GetMapping("query")
+    @GetMapping("/user/query")
     public ResponseEntity<User> volidCode(@RequestParam("username") String username, @RequestParam("passward") String password) {
         User user = this.userService.queryUser(username, password);
         if (user == null) {

@@ -65,6 +65,9 @@ public class LoginFilter implements GlobalFilter, Ordered {
         List<String> allowsPaths = this.filterProperties.getAllowPaths();
         // 获取请求路径
         Map<String, Object> attributes = exchange.getAttributes();
+        //PreserveHostHeaderGatewayFilter就是在gateway转发请求的时候把原始请求的host头部带上，
+        // 转发给目标服务。默认该filter是启用的。
+        attributes.put(PRESERVE_HOST_HEADER_ATTRIBUTE,true);
         String requestUrl = attributes.get(GATEWAY_ORIGINAL_REQUEST_URL_ATTR).toString();
         log.info("请求URI地址：{},白名单信息：{}", requestUrl, JSONUtil.toJsonStr(allowsPaths));
         for (String allowsPath : allowsPaths) {

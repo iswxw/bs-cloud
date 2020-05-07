@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @Author: wxw
  * @create: 2020-04-19-12:44
  */
-@RequestMapping("/user")
+@RequestMapping()
 public interface UserClient {
 
     //@ApiOperation("根据用户名和密码查询指定用户")
-    @GetMapping("query")
+    @GetMapping("/user/query")
     public User volidCode(@RequestParam("username") String username, @RequestParam("passward") String password);
 }

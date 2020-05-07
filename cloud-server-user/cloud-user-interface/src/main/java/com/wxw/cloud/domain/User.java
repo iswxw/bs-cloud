@@ -36,7 +36,7 @@ public class User implements Serializable {
     /**
      * 用户名
      */
-    @Length(min = 3, max = 30, message = "用户名只能在3~30位之间")
+    @Length(min = 2, max = 30, message = "用户名只能在3~30位之间")
     private String username;
 
     /**

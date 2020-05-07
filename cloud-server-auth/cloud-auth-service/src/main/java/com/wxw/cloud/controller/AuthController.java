@@ -42,14 +42,16 @@ public class AuthController {
     @PostMapping("accredit")
     public ResponseEntity<Void> accredit(
             @RequestParam("username")String username,
-            @RequestParam("passward")String passward,
+            @RequestParam("password")String password,
             HttpServletRequest request,
             HttpServletResponse response){
-        String token = this.authService.accredit(username,passward);
+        log.info("入参1：{},入参2：{}", username,password);
+        String token = this.authService.accredit(username,password);
         if (StringUtils.isBlank(token)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         CookieUtils.setCookie(request,response,this.jwtProperties.getCookieName(), token,this.jwtProperties.getExpire()*60);
+
         return ResponseEntity.ok(null);
     }
 

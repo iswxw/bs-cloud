@@ -51,7 +51,6 @@ spring:
             - Path=/api/order/**   # 路由到订单系统
           filters:
             - StripPrefix=2
-
 eureka:
   client:
     fetch-registry: true  #需要拉取服务
@@ -75,9 +74,7 @@ wxw:
     allowPaths:
       - /api/auth
       - /api/search
-      - /api/user/register
-      - /api/user/check
-      - /api/user/code
+      - /api/user
       - /api/item
       - /api-docs
       - /api/cart
