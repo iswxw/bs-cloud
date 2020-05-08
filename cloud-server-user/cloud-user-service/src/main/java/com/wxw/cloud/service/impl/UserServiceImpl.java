@@ -20,6 +20,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -112,6 +113,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             return user;
         }
         return null;
+    }
+
+    @Override
+    public List<User> getUserList() {
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+         return this.userMapper.selectList(wrapper);
     }
 
 }

@@ -24,4 +24,6 @@ public interface IAddressService extends IService<Address> {
     void deleteAddress(Long addressId);
 
     Address queryAddressById(Long addressId);
+
+    List<Address> getAddressList();
 }

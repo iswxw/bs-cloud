@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxw.cloud.domain.User;
 
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * <p>
@@ -23,4 +24,6 @@ public interface IUserService extends IService<User> {
     void register(User user, String code);
 
     User queryUser(String username, String password);
+
+    List<User> getUserList();
 }

@@ -112,6 +112,7 @@ public class GoodsController {
         return ResponseEntity.ok(sku);
     }
 
+    // 根据分类id 查询spu集合查询
 
 }
 

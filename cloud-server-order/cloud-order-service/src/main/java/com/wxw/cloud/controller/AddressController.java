@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,7 +20,7 @@ import java.util.List;
  * @author WXW
  * @since 2020-04-27
  */
-@Controller
+@RestController
 @Api(tags = "AddressController",description = "地址管理")
 @RequestMapping("address")
 public class AddressController {
@@ -67,6 +68,16 @@ public class AddressController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok(address);
+    }
+
+    @ApiOperation("获取地址列表")
+    @GetMapping("list")
+    public ResponseEntity<List<Address>> getAddressList(){
+        List<Address> addressList = this.addressService.getAddressList();
+        if (CollectionUtils.isEmpty(addressList)){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(addressList);
     }
 }
 

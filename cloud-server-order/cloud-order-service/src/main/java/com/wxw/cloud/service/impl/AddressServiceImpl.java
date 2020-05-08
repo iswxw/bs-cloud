@@ -68,6 +68,12 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
         return this.addressMapper.selectOne(wrapper);
     }
 
+    @Override
+    public List<Address> getAddressList() {
+        QueryWrapper<Address> wrapper = new QueryWrapper<>();
+        return this.addressMapper.selectList(wrapper);
+    }
+
     public void setDefaultAddress(Address address){
         if (address.getDefaultAddress()){
             //如果将本地址设置为默认地址，那么该用户下的其他地址都应该是非默认地址

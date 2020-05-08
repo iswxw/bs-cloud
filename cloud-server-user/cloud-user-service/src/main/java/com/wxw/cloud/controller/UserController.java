@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -22,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.io.Console;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 /**
  * <p>
@@ -92,6 +94,18 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
+
+    @ApiOperation("获取用户列表")
+    @GetMapping("list")
+    public ResponseEntity<List<User>> getUserList(){
+        List<User> userList = this.userService.getUserList();
+        if (CollectionUtils.isEmpty(userList)){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(userList);
+    }
+
+
 
 }
 

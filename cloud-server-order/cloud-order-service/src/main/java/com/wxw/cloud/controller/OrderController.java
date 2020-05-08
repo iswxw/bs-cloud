@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -261,6 +262,16 @@ public class OrderController {
         }
     }
 
+    // 供应后台管理
+    @ApiOperation("获取订单列表")
+    @GetMapping
+    public ResponseEntity<List<Order>> getOrderList(){
+        List<Order> orderList = this.orderService.list();
+        if (CollectionUtils.isEmpty(orderList)){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(orderList);
+    }
 
 
 }
