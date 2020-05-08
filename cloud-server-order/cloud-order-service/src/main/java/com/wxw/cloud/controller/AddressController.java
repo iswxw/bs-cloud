@@ -69,7 +69,7 @@ public class AddressController {
         }
         return ResponseEntity.ok(address);
     }
-
+    // 后台管理
     @ApiOperation("获取地址列表")
     @GetMapping("list")
     public ResponseEntity<List<Address>> getAddressList(){
@@ -79,5 +79,7 @@ public class AddressController {
         }
         return ResponseEntity.ok(addressList);
     }
+
+
 }
 

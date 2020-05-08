@@ -95,6 +95,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    // 后台管理
     @ApiOperation("获取用户列表")
     @GetMapping("list")
     public ResponseEntity<List<User>> getUserList(){
@@ -105,6 +106,12 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
+    @ApiOperation("获取用户量")
+    @GetMapping("count")
+    public ResponseEntity<Integer> getCount(){
+        List<User> list = this.userService.list();
+        return ResponseEntity.ok(list.size());
+    }
 
 
 }
