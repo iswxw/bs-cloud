@@ -167,7 +167,9 @@ public class GoodsServiceImpl implements IGoodsService {
         List<Sku> skus = this.skuMapper.selectList(wrapper);
         skus.forEach(sku -> {
             Stock stock = this.stockMapper.selectById(sku.getId());
-            sku.setStock(stock.getStock());
+            if(stock != null){
+                sku.setStock(stock.getStock());
+            }
         });
         return skus;
     }

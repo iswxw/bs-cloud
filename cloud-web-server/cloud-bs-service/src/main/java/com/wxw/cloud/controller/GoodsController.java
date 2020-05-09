@@ -39,9 +39,9 @@ public class GoodsController {
     @ApiOperation("根据条件分页查询SPU")
     public ResponseEntity<PageResult<SpuBO>> querySpuByPage(
             @RequestParam(value = "key",required = false)String key,
-            @RequestParam(value = "saleable",required = false)Boolean saleable,
             @RequestParam(value = "page",defaultValue = "1")Integer page,
-            @RequestParam(value = "rows",defaultValue = "5")Integer rows
+            @RequestParam(value = "rows",defaultValue = "5")Integer rows,
+            @RequestParam(value = "saleable",required = false)Boolean saleable
     ){
         PageResult<SpuBO> result = this.goodsService.querySpuByPage(key,saleable,page,rows);
         if (result == null || CollectionUtils.isEmpty(result.getItems())){
