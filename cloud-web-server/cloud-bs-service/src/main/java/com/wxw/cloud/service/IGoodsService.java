@@ -1,5 +1,6 @@
 package com.wxw.cloud.service;
 
+import com.wxw.cloud.bo.SkuBO;
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.domain.Sku;
 import com.wxw.cloud.domain.Spu;
@@ -63,4 +64,7 @@ public interface IGoodsService {
      * @return
      */
     Sku querySkuBySkuId(Long skuId);
+
+    // // 分页查询SKU集合信息 包括三级类目 - 全部商品展示
+    SkuBO getSkusAndCid3(Integer page,Integer rows);
 }

@@ -1,6 +1,7 @@
 package com.wxw.cloud.controller;
 
 
+import com.wxw.cloud.bo.SkuBO;
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.domain.Sku;
 import com.wxw.cloud.domain.Spu;
@@ -112,7 +113,19 @@ public class GoodsController {
         return ResponseEntity.ok(sku);
     }
 
-    // 根据分类id 查询spu集合查询
+    // 分页查询SKU集合信息 包括三级类目 - 全部商品展示
+    @ApiOperation("分页查询SKU集合信息 包括三级类目")
+    @GetMapping("/skucidlist")
+    public ResponseEntity<SkuBO> getSkusAndCid3(
+            @RequestParam(value = "page",defaultValue = "1") Integer page,
+            @RequestParam(value = "rows",defaultValue = "10") Integer rows){
+          SkuBO pageskuList = this.goodsService.getSkusAndCid3(page,rows);
+        if (pageskuList== null|| pageskuList.getSkus() == null){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok(pageskuList);
+    }
+
 
 }
 

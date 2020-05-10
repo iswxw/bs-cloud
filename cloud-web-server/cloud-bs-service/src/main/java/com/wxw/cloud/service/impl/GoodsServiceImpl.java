@@ -3,6 +3,7 @@ package com.wxw.cloud.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wxw.cloud.bo.SkuBO;
 import com.wxw.cloud.bo.SpuBO;
 import com.wxw.cloud.dao.*;
 import com.wxw.cloud.domain.*;
@@ -10,6 +11,8 @@ import com.wxw.cloud.result.PageResult;
 import com.wxw.cloud.service.ICategoryService;
 import com.wxw.cloud.service.IGoodsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wxw.cloud.tools.ListPageUtil;
+import com.wxw.cloud.vo.SkuVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.amqp.AmqpException;
@@ -21,8 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -205,7 +207,6 @@ public class GoodsServiceImpl implements IGoodsService {
         spuBO.setSaleable(null);
         this.spuMapper.updateById(spuBO);
         this.spuDetailMapper.updateById(spuBO.getSpuDetail());
-
         sendMsg("update", spuBO.getId());
     }
 
@@ -218,5 +219,69 @@ public class GoodsServiceImpl implements IGoodsService {
     public Sku querySkuBySkuId(Long skuId) {
         return this.skuMapper.selectById(skuId);
     }
+
+    @Override
+    public SkuBO getSkusAndCid3(Integer page,Integer rows) {
+        SkuBO skuBO = new SkuBO();
+        //1.查询SPU
+        QueryWrapper<Spu> querySpu = new QueryWrapper<>();
+        List<Spu> spus = this.spuMapper.selectList(querySpu);
+        //2.通过spu查询skulist
+        PageResult<SkuVO> pageResult = new PageResult<>();
+        // 商品集合
+        List<SkuVO> skus = new ArrayList<>();
+        List<Long> cid3s= new ArrayList<>();
+        //log.info("SPU：{}",spus);
+        spus.forEach(spu -> {
+            QueryWrapper<Sku> querySku = new QueryWrapper<>();
+            querySku.eq("spu_id", spu.getId());
+            List<Sku> list = this.skuMapper.selectList(querySku);
+            //log.info("查询出的库存数量：{}",list);
+            list.forEach(sku -> {
+//                log.info("SKU ：{}",sku);
+//                log.info("SKU ID：{}",sku.getId());
+                Stock stock = this.stockMapper.selectById(sku.getId());
+
+                if (stock != null){
+                    sku.setStock(stock.getStock());
+                }
+                // 设置空库存
+//                Stock add = new Stock();
+//                add.setSkuId(sku.getId());
+//                add.setStock(100);
+//                this.stockMapper.updateById(add);
+//                sku.setStock(add.getStock());
+            });
+            // sku 集合转换为 skuvo集合
+            List<SkuVO> skuVOS = list.stream().map(sku -> {
+                SkuVO skuVO = new SkuVO();
+                skuVO.setSubtitle(spu.getSubTitle());
+                skuVO.setStock(sku.getStock());
+                skuVO.setId(sku.getId());
+                skuVO.setSpuId(sku.getSpuId());
+                skuVO.setImages(sku.getImages());
+                skuVO.setPrice(sku.getPrice());
+                skuVO.setTitle(sku.getTitle());
+                return skuVO;
+            }).collect(Collectors.toList());
+            skus.addAll(skuVOS);
+            cid3s.add(spu.getCid3());
+        });
+        // 分页处理
+        ListPageUtil<SkuVO> pager = new ListPageUtil<>(skus,rows);
+        List<SkuVO> pagedList = pager.getPagedList(page);
+        pageResult.setItems(pagedList);
+        pageResult.setTotal(new Long(skus.size()));
+        pageResult.setTotalPage(new Long(pager.getPageCount()));
+        skuBO.setSkus(pageResult);
+        //3. 增加目录信息
+        skuBO.setCid3s(new HashSet<>(cid3s));
+        List<String> names = this.categoryService.queryNamesByIds(cid3s);
+        skuBO.setCname(new HashSet<>(names));
+        // 保存数据
+        return skuBO;
+    }
+
+
 
 }
