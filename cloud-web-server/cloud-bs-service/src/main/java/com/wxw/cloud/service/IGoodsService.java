@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxw.cloud.result.PageResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -65,6 +66,9 @@ public interface IGoodsService {
      */
     Sku querySkuBySkuId(Long skuId);
 
-    // // 分页查询SKU集合信息 包括三级类目 - 全部商品展示
+    // 分页查询SKU集合信息 包括三级类目 - 全部商品展示
     SkuBO getSkusAndCid3(Integer page,Integer rows);
+
+    // 商品详情页数据加载
+    Map<String,Object> loadData(Long spuId);
 }

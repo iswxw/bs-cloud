@@ -13,11 +13,14 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -124,6 +127,16 @@ public class GoodsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(pageskuList);
+    }
+
+    // 商品详情页
+    @ApiOperation("商品详情页")
+    @GetMapping("item/detail/{spuId}")
+    public ModelMap getDetails(@PathVariable("spuId")Long spuId, Model model){
+        ModelMap modelMap = new ModelMap();
+        Map<String, Object> map = this.goodsService.loadData(spuId);
+        modelMap.addAllAttributes(map);
+        return modelMap;
     }
 
 
