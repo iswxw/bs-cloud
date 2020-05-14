@@ -7,8 +7,11 @@ import com.wxw.cloud.domain.UserInfo;
 import com.wxw.cloud.interceptor.LoginInterceptor;
 import com.wxw.cloud.rpc.GoodsRpc;
 import com.wxw.cloud.tools.JsonUtils;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.data.redis.core.BoundHashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,8 +29,11 @@ import java.util.stream.Collectors;
 @Service
 public class CartService {
 
+//    @Resource
+//    private StringRedisTemplate stringRedisTemplate;
+
     @Resource
-    private StringRedisTemplate stringRedisTemplate;
+    private RedisTemplate<Object,Object> template;
 
     @Resource
     private GoodsRpc goodsRpc;
@@ -43,7 +49,7 @@ public class CartService {
         // 获取用户信息
         UserInfo userinfo = LoginInterceptor.getUserinfo();
         // 查询购物车记录
-        BoundHashOperations<String, Object, Object> hashOps = this.stringRedisTemplate.boundHashOps(KEY_PREFIX + userinfo.getId());
+        BoundHashOperations<Object, Object, Object> hashOps = template.boundHashOps(KEY_PREFIX + userinfo.getId());
         String key = cart.getSkuId().toString();
         Integer num = cart.getNum();
         // 判断当前的商品是否在购物车中
@@ -73,18 +79,18 @@ public class CartService {
     public List<Cart> queryCarts() {
         UserInfo userinfo = LoginInterceptor.getUserinfo();
         // 判断用户是否有购物车记录
-        if (this.stringRedisTemplate.hasKey(KEY_PREFIX + userinfo.getId())){
+        if (!this.template.hasKey(KEY_PREFIX + userinfo.getId())){
+            // 不存在，直接返回
             return null;
         }
         // 获取用户的购物车记录
-        BoundHashOperations<String, Object, Object> hashOps = this.stringRedisTemplate.boundHashOps(KEY_PREFIX + userinfo.getId());
+        BoundHashOperations<Object, Object, Object> hashOps = template.boundHashOps(KEY_PREFIX + userinfo.getId());
         // 获取购物车所有cart集合
         List<Object> cartsJson = hashOps.values();
         // 如果购物车集合为空，直接返回null
         if (CollectionUtils.isEmpty(cartsJson)){
             return null;
         }
-
         // 把List<Object> 集合转换为List<Cart>集合
         return cartsJson.stream().map(cartJson -> JsonUtils.parse(cartJson.toString(), Cart.class)).collect(Collectors.toList());
     }
@@ -95,12 +101,12 @@ public class CartService {
     public void updateNum(Cart cart) {
         UserInfo userinfo = LoginInterceptor.getUserinfo();
         // 判断用户是否有购物车记录
-        if (this.stringRedisTemplate.hasKey(KEY_PREFIX + userinfo.getId())){
+        if (this.template.hasKey(KEY_PREFIX + userinfo.getId())){
             return;
         }
         Integer num = cart.getNum();
         // 获取用户的购物车记录
-        BoundHashOperations<String, Object, Object> hashOps = this.stringRedisTemplate.boundHashOps(KEY_PREFIX + userinfo.getId());
+        BoundHashOperations<Object, Object, Object> hashOps = template.boundHashOps(KEY_PREFIX + userinfo.getId());
 
         String cartJson = hashOps.get(cart.getSkuId().toString()).toString();
 
@@ -117,7 +123,7 @@ public class CartService {
         // 获取登录用户
         UserInfo userinfo = LoginInterceptor.getUserinfo();
         // 获取用户的购物车记录
-        BoundHashOperations<String, Object, Object> hashOps = this.stringRedisTemplate.boundHashOps(KEY_PREFIX + userinfo.getId());
+        BoundHashOperations<Object, Object, Object> hashOps = this.template.boundHashOps(KEY_PREFIX + userinfo.getId());
         hashOps.delete(skuId);
     }
 }

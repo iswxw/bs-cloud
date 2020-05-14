@@ -55,9 +55,9 @@ public class OrderController {
     @ApiOperation(value = "创建订单接口，返回订单编号",notes = "创建订单")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "order",required = true,value = "订单的json对象，包含订单条目和物流信息"),
-            @ApiImplicitParam(name = "seck",required = true,value = "是否是秒杀订单")
+            @ApiImplicitParam(name = "seck",required = false,value = "是否是秒杀订单")
     })
-    public ResponseEntity<List<String>> createOrder(@RequestParam("seck") String seck, @RequestBody @Valid Order order){
+    public ResponseEntity<List<String>> createOrder(@RequestParam(value = "seck",defaultValue = "1") String seck, @RequestBody @Valid Order order){
         // 查询库存
         List<Long> skuIds = this.orderService.queryStock(seck,order);
         if (skuIds.size() != 0){

@@ -131,8 +131,8 @@ public class GoodsController {
 
     // 商品详情页
     @ApiOperation("商品详情页")
-    @GetMapping("item/detail/{spuId}")
-    public ModelMap getDetails(@PathVariable("spuId")Long spuId, Model model){
+    @GetMapping("item/detail")
+    public ModelMap getDetails(@RequestParam("spuId")Long spuId, Model model){
         ModelMap modelMap = new ModelMap();
         Map<String, Object> map = this.goodsService.loadData(spuId);
         modelMap.addAllAttributes(map);

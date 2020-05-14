@@ -4,6 +4,7 @@ import com.wxw.cloud.domain.Cart;
 import com.wxw.cloud.service.CartService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Delete;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,8 @@ import java.util.List;
  * @Author: wxw
  * @create: 2020-04-23-14:34
  */
-@Controller
+@RestController
+@Slf4j
 @Api(tags = "CartController",description = "购物车微服务")
 public class CartController {
 
@@ -37,12 +39,14 @@ public class CartController {
      * 查询购物车
      */
     @ApiOperation("查询购物车")
-    @GetMapping
+    @GetMapping("/find")
     public ResponseEntity<List<Cart>> queryCarts(){
+        log.info("Start查询购物车：{}");
         List<Cart> carts = this.cartService.queryCarts();
         if (CollectionUtils.isEmpty(carts)){
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+        log.info("End 查询购物车：{}",carts);
         return ResponseEntity.ok(carts);
     }
 
@@ -54,7 +58,7 @@ public class CartController {
     }
 
     @ApiOperation("删除购物车")
-    @Delete("{skuId}")
+    @DeleteMapping("{skuId}")
     public ResponseEntity<Void> deleteCart(@PathVariable("skuId")String skuId){
           this.cartService.deleteCart(skuId);
           return ResponseEntity.ok().build();
