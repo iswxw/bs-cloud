@@ -31,5 +31,5 @@ wxw:
     secret: wxw@Login(Auth}*^31)&BS2020% # 登录校验的密钥
     pubKeyPath: F:\Study_GO\BS2020\rsa\rsa.pub # 公钥地址
     priKeyPath: F:\Study_GO\BS2020\rsa\rsa.pri # 私钥地址
-    expire: 30 # 过期时间,单位分钟
+    expire: 50 # 过期时间,单位分钟
     cookieName: BS_TOKEN
