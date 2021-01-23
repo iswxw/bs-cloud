@@ -1,0 +1,16 @@
+启动依赖项（前端和后台项目）
+
+(1) 依赖本人阿里云服务器配置
+    - FastDFS 文件系统
+    - Nginx
+    - RabbitMQ
+    - ElasticSearch    /home/wxw/elasticsearch/bin/
+    - Redis
+
+(2) 本地依赖
+    - 本地nginx配置
+    - SwitchHost 域名绑定配置
+    - 先启动es，在启动kibana 可以可视化
+
+(3) 展示辅助项
+    - API微服务系统所有接口：http://bs.wxw.com:10010/swagger-ui.html

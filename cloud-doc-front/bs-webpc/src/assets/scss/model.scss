@@ -1,0 +1,51 @@
+.cancel {
+  float: right;
+  &:hover{
+    color: red;
+    cursor: pointer;
+  }
+}
+.model{
+  @include position(fixed);
+  z-index: 100;
+  transition: all .3s;
+  .mask{
+    @include position(fixed);
+    background-color: $colorI;
+    opacity: 0.5;
+  }
+  &.slider-leave-active{
+    top: -100%;
+  }
+  &.slider-enter-active{
+    top: 0;
+  }
+  &.slider-enter{
+    top: -100%;
+  }
+  &.slider-leave{
+    top: 0;
+  }
+  .model-dialog{
+    @include position(absolute,40%, 50%, 660px, auto);
+    background-color: $colorG;
+    transform: translate(-50%,-50%);
+    .model-header{
+      height: 60px;
+      background-color: $colorJ;
+      padding: 0 26px;
+      line-height: 60px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .model-body {
+      padding: 40px 40px 54px;
+    }
+    .model-footer{
+      height: 82px;
+      line-height: 82px;
+      text-align: center;
+      background-color: $colorJ;
+    }
+  }
+}
