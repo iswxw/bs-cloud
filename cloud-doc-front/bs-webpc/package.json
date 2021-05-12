@@ -12,7 +12,7 @@
     "core-js": "^3.6.4",
     "element-ui": "^2.13.1",
     "markdown-loader": "^5.1.0",
-    "swiper": "^5.3.7",
+    "swiper": "^6.5.1",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.0",
     "vue-cookie": "^1.1.4",
