@@ -13,6 +13,7 @@ bs-cloud，一个基于微服务架构的前后端分离的购物商城
 ### 演示
 
 - 视频演示地址：https://www.bilibili.com/video/BV1aa411F7ic
+- 企鹅技术交流群：1102814874
 
 ### 项目特点
 
@@ -46,7 +47,7 @@ bs-cloud，一个基于微服务架构的前后端分离的购物商城
 
 ### 关注&交流
 
-刚兴趣的小伙伴可以搜索或扫描下方二维码关注公众号【Java半颗糖】，一起交流学习。
+感兴趣的小伙伴可以搜索或扫描下方二维码关注公众号【Java半颗糖】，一起交流学习。
 
 ![](https://gitee.com/wwxw/image/raw/master/wechat/FDekBM1FXHpH.jpg) 
 
