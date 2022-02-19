@@ -49,5 +49,5 @@ bs-cloud，一个基于微服务架构的前后端分离的购物商城
 
 感兴趣的小伙伴可以搜索或扫描下方二维码关注公众号【Java半颗糖】，一起交流学习。
 
-![](https://gitee.com/wwxw/image/raw/master/wechat/FDekBM1FXHpH.jpg) 
+![](https://gitee.com/iswxw/image/raw/master/wechat/FDekBM1FXHpH.jpg) 
 
