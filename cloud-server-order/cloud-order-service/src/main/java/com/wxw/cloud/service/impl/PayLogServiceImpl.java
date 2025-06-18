@@ -57,7 +57,7 @@ public class PayLogServiceImpl extends ServiceImpl<PayLogMapper, PayLog> impleme
         payLog.setStatus(trade_status);
         payLog.setPayType(1);
         payLog.setPayTime(LocalDateTime.now());
-        payLog.setBankType("中信银行");
+        payLog.setBankType("银行名称");
         // 更新支付流水
         int insert = this.payLogMapper.insert(payLog);
         // 更新订单状态
